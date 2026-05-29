@@ -15,6 +15,8 @@ import stickmanHook from "@/assets/game-stickman-hook.png";
 import escapeRoad2 from "@/assets/game-escape-road-2.png";
 import jetpack from "@/assets/game-jetpack.png";
 import flappy from "@/assets/game-flappy.png";
+import richRun from "@/assets/game-rich-run.png";
+import burritoBison from "@/assets/game-burrito-bison.png";
 
 export const Route = createFileRoute("/games")({
   head: () => ({ meta: [{ title: "Arcade" }] }),
@@ -37,6 +39,8 @@ const games = [
   { name: "Escape Road 2", img: escapeRoad2, url: "/games/escape-road-2.html" },
   { name: "Jetpack Joyride", img: jetpack, url: "/games/jetpack-joyride.html" },
   { name: "Flappy Bird", img: flappy, url: "/games/flappy-bird.html" },
+  { name: "Rich Run 3D", img: richRun, url: "/games/rich-run-3d.html" },
+  { name: "Burrito Bison: Launcha Libre", img: burritoBison, url: "/games/burrito-bison.html" },
 ];
 
 function Games() {
