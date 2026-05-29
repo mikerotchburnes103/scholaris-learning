@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
 import bowmasters from "@/assets/game-bowmasters.png";
@@ -14,17 +15,19 @@ export const Route = createFileRoute("/games")({
 });
 
 const games = [
-  { name: "Peggle", img: peggle },
-  { name: "Penguin Dash", img: penguin },
-  { name: "Bowmasters", img: bowmasters },
-  { name: "Knight's Fall", img: knight },
-  { name: "Escape Road 3", img: escape },
-  { name: "Geometry Dash", img: geometry },
-  { name: "Your Only Move Is Hustle", img: hustle },
-  { name: "The Archers", img: archer },
+  { name: "Peggle", img: peggle, url: "/games/peggle.html" },
+  { name: "Bouncemasters", img: penguin, url: "/games/bouncemasters.html" },
+  { name: "Bowmasters", img: bowmasters, url: "/games/bowmasters.html" },
+  { name: "Ragdoll Hit", img: knight, url: "/games/ragdoll-hit.html" },
+  { name: "Escape Road 3", img: escape, url: "/games/escape-road-3.html" },
+  { name: "Geometry Dash", img: geometry, url: "/games/geometry-dash.html" },
+  { name: "Your Only Move Is Hustle", img: hustle, url: "/games/yomi-hustle.html" },
+  { name: "Ragdoll Archers", img: archer, url: "/games/ragdoll-archers.html" },
 ];
 
 function Games() {
+  const [playing, setPlaying] = useState<typeof games[number] | null>(null);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur">
@@ -45,12 +48,13 @@ function Games() {
           {games.map((g) => (
             <button
               key={g.name}
-              className="group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition hover:-translate-y-1 hover:border-fuchsia-500/50 hover:shadow-[0_0_30px_-5px_rgba(217,70,239,0.4)]"
+              onClick={() => setPlaying(g)}
+              className="group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 text-left transition hover:-translate-y-1 hover:border-fuchsia-500/50 hover:shadow-[0_0_30px_-5px_rgba(217,70,239,0.4)]"
             >
               <div className="aspect-square overflow-hidden">
                 <img src={g.img} alt={g.name} className="h-full w-full object-cover transition group-hover:scale-105" />
               </div>
-              <div className="p-3 text-left">
+              <div className="p-3">
                 <h3 className="truncate text-sm font-semibold">{g.name}</h3>
                 <p className="text-xs text-zinc-500">Play now</p>
               </div>
@@ -58,6 +62,36 @@ function Games() {
           ))}
         </div>
       </main>
+
+      {playing && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-zinc-950">
+          <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-2">
+            <span className="font-semibold">{playing.name}</span>
+            <div className="flex gap-2">
+              <a
+                href={playing.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-md border border-zinc-700 px-3 py-1 text-xs hover:bg-zinc-800"
+              >
+                Open in new tab
+              </a>
+              <button
+                onClick={() => setPlaying(null)}
+                className="rounded-md bg-fuchsia-600 px-3 py-1 text-xs font-semibold hover:bg-fuchsia-500"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+          <iframe
+            src={playing.url}
+            title={playing.name}
+            className="h-full w-full flex-1 border-0"
+            allow="autoplay; fullscreen; gamepad *"
+          />
+        </div>
+      )}
     </div>
   );
 }
