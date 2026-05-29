@@ -11,9 +11,10 @@ import archer from "@/assets/game-archer.png";
 import escapeCity from "@/assets/game-escape-city.png";
 import moneyRush from "@/assets/game-money-rush.png";
 import escapeRoad from "@/assets/game-escape-road.png";
-import stickmanHook from "@/assets/game-stickman-hook.jpg";
+import stickmanHook from "@/assets/game-stickman-hook.png";
 import escapeRoad2 from "@/assets/game-escape-road-2.png";
-import jetpack from "@/assets/game-jetpack.jpg";
+import jetpack from "@/assets/game-jetpack.png";
+import flappy from "@/assets/game-flappy.png";
 
 export const Route = createFileRoute("/games")({
   head: () => ({ meta: [{ title: "Arcade" }] }),
@@ -35,6 +36,7 @@ const games = [
   { name: "Stickman Hook", img: stickmanHook, url: "/games/stickman-hook.html" },
   { name: "Escape Road 2", img: escapeRoad2, url: "/games/escape-road-2.html" },
   { name: "Jetpack Joyride", img: jetpack, url: "/games/jetpack-joyride.html" },
+  { name: "Flappy Bird", img: flappy, url: "/games/flappy-bird.html" },
 ];
 
 function Games() {
