@@ -13,11 +13,114 @@ export const Route = createFileRoute("/")({
 
 const PASSWORDS = ["nofemboys", "femboy", "8008"];
 
+type Lesson = { title: string; instructor: string; duration: string; level: string; summary: string; outline: string[] };
+
+const LESSONS: Record<string, Lesson> = {
+  "Browse Courses": {
+    title: "Course Catalog — Fall Term",
+    instructor: "Scholaris Faculty",
+    duration: "Self-paced",
+    level: "All levels",
+    summary: "Explore over 18,000 free lessons across mathematics, science, literature, and history. New modules are added every Monday.",
+    outline: ["Introduction to Algebra (12 lessons)", "Cellular Biology Foundations (9 lessons)", "American Literature: 1850-1925 (15 lessons)", "World History: Bronze Age to Renaissance (22 lessons)", "Intro to Python for Learners (18 lessons)"],
+  },
+  "Watch Demo": {
+    title: "How Scholaris Works — A 4 Minute Tour",
+    instructor: "Dr. Helena Park",
+    duration: "4 min",
+    level: "Intro",
+    summary: "See how lessons, quizzes, and instructor feedback come together in a typical Scholaris learning week.",
+    outline: ["Meeting your instructor", "Daily lesson structure", "Practice problems & feedback", "Tracking your progress", "Joining study groups"],
+  },
+  Mathematics: {
+    title: "Mathematics Track",
+    instructor: "Mr. Henderson",
+    duration: "180 lessons",
+    level: "Beginner → Advanced",
+    summary: "Build a rock-solid foundation from arithmetic through multivariable calculus with guided practice every step of the way.",
+    outline: ["Number sense & arithmetic", "Pre-algebra & algebra I", "Geometry & trigonometry", "Algebra II & precalculus", "Calculus I, II, III", "Linear algebra primer"],
+  },
+  Science: {
+    title: "Science Track",
+    instructor: "Dr. Amelia Cho",
+    duration: "142 lessons",
+    level: "Beginner → Intermediate",
+    summary: "Hands-on experiments and clear explanations across the three core sciences.",
+    outline: ["Biology: cells, genetics, ecosystems", "Chemistry: atoms, bonds, reactions", "Physics: mechanics, waves, electricity", "Lab notebook fundamentals", "Scientific writing"],
+  },
+  Literature: {
+    title: "Literature Track",
+    instructor: "Prof. Daniel Rourke",
+    duration: "96 lessons",
+    level: "All levels",
+    summary: "Close reading of classic and contemporary works, with essay-writing workshops every two weeks.",
+    outline: ["The short story tradition", "Shakespeare for modern readers", "19th-century novels", "20th-century American voices", "Contemporary essay writing"],
+  },
+  History: {
+    title: "History Track",
+    instructor: "Dr. Yuki Tanaka",
+    duration: "118 lessons",
+    level: "Beginner → Advanced",
+    summary: "A sweeping survey from ancient Mesopotamia through the 21st century, with primary-source analysis.",
+    outline: ["The ancient world", "Classical empires", "The medieval period", "The early modern era", "The long 19th century", "Modern world history"],
+  },
+  Courses: {
+    title: "Featured Courses This Week",
+    instructor: "Various",
+    duration: "Varies",
+    level: "All levels",
+    summary: "A curated selection of the most-loved courses from our community.",
+    outline: ["Introduction to Algebra — Mr. Henderson", "The Periodic Table Made Simple — Dr. Cho", "Reading Hemingway — Prof. Rourke", "Rome: Rise & Fall — Dr. Tanaka", "Beginner Python — Ms. Alvarez"],
+  },
+  Subjects: {
+    title: "All Subjects",
+    instructor: "Scholaris Faculty",
+    duration: "—",
+    level: "All",
+    summary: "Browse every subject area on the Scholaris platform.",
+    outline: ["Mathematics", "Science", "Literature", "History", "Languages", "Computer Science", "The Arts", "Civics & Economics"],
+  },
+  Teachers: {
+    title: "Meet Our Instructors",
+    instructor: "1,200+ educators",
+    duration: "—",
+    level: "—",
+    summary: "Every Scholaris instructor brings at least a decade of classroom experience.",
+    outline: ["Mr. Henderson — Mathematics", "Dr. Amelia Cho — Chemistry", "Prof. Daniel Rourke — Literature", "Dr. Yuki Tanaka — History", "Ms. Alvarez — Computer Science", "Dr. Helena Park — Onboarding"],
+  },
+  Resources: {
+    title: "Learning Resources",
+    instructor: "—",
+    duration: "—",
+    level: "All",
+    summary: "Free worksheets, lesson plans, and printable study guides to accompany every course.",
+    outline: ["Printable worksheets", "Lesson plans for teachers", "Parent guides", "Study schedules", "Flashcard decks"],
+  },
+  About: {
+    title: "About Scholaris",
+    instructor: "—",
+    duration: "—",
+    level: "—",
+    summary: "Scholaris Learning Institute was founded in 2014 to bring high-quality lessons to every learner, free of charge.",
+    outline: ["Our mission", "Our faculty", "Accreditation", "Annual impact report", "Careers at Scholaris"],
+  },
+};
+
+const REVIEWERS = [
+  { n: "Sarah M.", r: "High school senior", q: "Scholaris helped me raise my AP Calculus score from a 3 to a 5. The instructors actually care.", img: "https://i.pravatar.cc/96?img=47" },
+  { n: "David O.", r: "Adult learner", q: "I went back to school at 42. Without these free history courses, I never would've finished my GED.", img: "https://i.pravatar.cc/96?img=12" },
+  { n: "Priya K.", r: "Parent & tutor", q: "My daughter struggled with reading comprehension. Six weeks here and she's reading above grade level.", img: "https://i.pravatar.cc/96?img=45" },
+  { n: "Marcus T.", r: "Undergraduate", q: "Better than half my actual lectures. The chemistry breakdowns are unreal.", img: "https://i.pravatar.cc/96?img=33" },
+  { n: "Elena R.", r: "Homeschool mom", q: "I use Scholaris as the backbone of our whole curriculum. Lessons are structured and rigorous.", img: "https://i.pravatar.cc/96?img=49" },
+  { n: "James W.", r: "Retired engineer", q: "Picked up Latin and astronomy in retirement. Lovely community of curious people.", img: "https://i.pravatar.cc/96?img=15" },
+];
+
 function Index() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
+  const [lesson, setLesson] = useState<Lesson | null>(null);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +131,10 @@ function Index() {
     }
   };
 
+  const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
+
   return (
     <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif">
-      {/* Top utility bar */}
       <div className="bg-emerald-900 text-emerald-50 text-xs">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
@@ -48,11 +152,9 @@ function Index() {
             </div>
           </div>
           <nav className="hidden gap-6 text-sm md:flex">
-            <a href="#" className="hover:text-emerald-700">Courses</a>
-            <a href="#" className="hover:text-emerald-700">Subjects</a>
-            <a href="#" className="hover:text-emerald-700">Teachers</a>
-            <a href="#" className="hover:text-emerald-700">Resources</a>
-            <a href="#" className="hover:text-emerald-700">About</a>
+            {["Courses", "Subjects", "Teachers", "Resources", "About"].map((l) => (
+              <button key={l} onClick={() => openLesson(l)} className="hover:text-emerald-700">{l}</button>
+            ))}
           </nav>
           <button
             onClick={() => setOpen(true)}
@@ -74,8 +176,8 @@ function Index() {
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
             <div className="flex gap-3">
-              <button className="rounded-md bg-emerald-700 px-6 py-3 font-semibold text-white hover:bg-emerald-800">Browse Courses</button>
-              <button className="rounded-md border border-slate-300 px-6 py-3 font-semibold hover:bg-slate-100">Watch Demo</button>
+              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-emerald-700 px-6 py-3 font-semibold text-white hover:bg-emerald-800">Browse Courses</button>
+              <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 px-6 py-3 font-semibold hover:bg-slate-100">Watch Demo</button>
             </div>
             <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500">
               <span>★★★★★ 4.9/5 — 28,401 reviews</span>
@@ -99,7 +201,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Stats strip */}
       <section className="border-y border-slate-200 bg-white py-10">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 text-center md:grid-cols-4">
           {[
@@ -126,43 +227,37 @@ function Index() {
               { t: "Literature", d: "Classics and modern essays" },
               { t: "History", d: "Ancient to contemporary" },
             ].map((s) => (
-              <div key={s.t} className="rounded-lg border border-slate-200 p-6 hover:border-emerald-700">
+              <button key={s.t} onClick={() => openLesson(s.t)} className="rounded-lg border border-slate-200 p-6 text-left hover:border-emerald-700">
                 <h3 className="mb-2 font-bold text-slate-900">{s.t}</h3>
                 <p className="text-sm text-slate-600">{s.d}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Reviews */}
       <section className="bg-[#f8f6f0] py-16">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="mb-2 text-center text-3xl font-bold">What our learners say</h2>
           <p className="mb-10 text-center text-sm text-slate-500">Real feedback from verified Scholaris students</p>
           <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { n: "Sarah M.", r: "High school senior", q: "Scholaris helped me raise my AP Calculus score from a 3 to a 5. The instructors actually care." },
-              { n: "David O.", r: "Adult learner", q: "I went back to school at 42. Without these free history courses, I never would've finished my GED." },
-              { n: "Priya K.", r: "Parent &amp; tutor", q: "My daughter struggled with reading comprehension. Six weeks here and she's reading above grade level." },
-              { n: "Marcus T.", r: "Undergraduate", q: "Better than half my actual lectures. The chemistry breakdowns are unreal." },
-              { n: "Elena R.", r: "Homeschool mom", q: "I use Scholaris as the backbone of our whole curriculum. Lessons are structured and rigorous." },
-              { n: "James W.", r: "Retired engineer", q: "Picked up Latin and astronomy in retirement. Lovely community of curious people." },
-            ].map((t) => (
+            {REVIEWERS.map((t) => (
               <figure key={t.n} className="rounded-lg border border-slate-200 bg-white p-6">
+                <div className="mb-3 flex items-center gap-3">
+                  <img src={t.img} alt={t.n} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">{t.n}</div>
+                    <div className="text-xs text-slate-500">{t.r}</div>
+                  </div>
+                </div>
                 <div className="mb-2 text-amber-500">★★★★★</div>
-                <blockquote className="text-sm text-slate-700" dangerouslySetInnerHTML={{ __html: `&ldquo;${t.q}&rdquo;` }} />
-                <figcaption className="mt-4 text-xs">
-                  <div className="font-semibold text-slate-900">{t.n}</div>
-                  <div className="text-slate-500" dangerouslySetInnerHTML={{ __html: t.r }} />
-                </figcaption>
+                <blockquote className="text-sm text-slate-700">&ldquo;{t.q}&rdquo;</blockquote>
               </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Partners */}
       <section className="border-t border-slate-200 bg-white py-10">
         <div className="mx-auto max-w-6xl px-6">
           <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500">As featured in</p>
@@ -189,6 +284,25 @@ function Index() {
           Disclaimer: This is not an educational website. All courses, statistics, instructor names, accreditations, partner logos, and reviews shown on this page are fictional and presented for entertainment purposes only. No actual instruction is provided.
         </p>
       </footer>
+
+      {lesson && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setLesson(null)}>
+          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="mb-1 text-2xl font-bold text-slate-900">{lesson.title}</h2>
+            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-700">{lesson.instructor} · {lesson.duration} · {lesson.level}</p>
+            <p className="mb-4 text-sm text-slate-600">{lesson.summary}</p>
+            <ul className="mb-5 space-y-2 text-sm text-slate-700">
+              {lesson.outline.map((o, i) => (
+                <li key={i} className="flex gap-2"><span className="text-emerald-700">{i + 1}.</span>{o}</li>
+              ))}
+            </ul>
+            <div className="flex gap-2">
+              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-emerald-700 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Enroll Now</button>
+              <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-100">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
