@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Scholaris | Learning made easy" },
+      { name: "description", content: "Scholaris Learning is a dual-purpose web application that functions as a realistic educational site and a hidden game portal." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Scholaris | Learning made easy" },
+      { property: "og:description", content: "Scholaris Learning is a dual-purpose web application that functions as a realistic educational site and a hidden game portal." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Scholaris | Learning made easy" },
+      { name: "twitter:description", content: "Scholaris Learning is a dual-purpose web application that functions as a realistic educational site and a hidden game portal." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/a6NbtNOfTWcsk5E8dmEMKjAv3wc2/social-images/social-1780076055506-ChatGPT_Image_May_29__2026_at_06_32_28_PM-removebg-preview.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/a6NbtNOfTWcsk5E8dmEMKjAv3wc2/social-images/social-1780076055506-ChatGPT_Image_May_29__2026_at_06_32_28_PM-removebg-preview.webp" },
     ],
     links: [
       {
