@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useA11ySettings } from "@/lib/a11y";
+import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,94 +18,17 @@ const PASSWORDS = ["nofemboys", "femboy", "8008"];
 type Lesson = { title: string; instructor: string; duration: string; level: string; summary: string; outline: string[] };
 
 const LESSONS: Record<string, Lesson> = {
-  "Browse Courses": {
-    title: "Course Catalog — Fall Term",
-    instructor: "Scholaris Faculty",
-    duration: "Self-paced",
-    level: "All levels",
-    summary: "Explore over 18,000 free lessons across mathematics, science, literature, and history. New modules are added every Monday.",
-    outline: ["Introduction to Algebra (12 lessons)", "Cellular Biology Foundations (9 lessons)", "American Literature: 1850-1925 (15 lessons)", "World History: Bronze Age to Renaissance (22 lessons)", "Intro to Python for Learners (18 lessons)"],
-  },
-  "Watch Demo": {
-    title: "How Scholaris Works — A 4 Minute Tour",
-    instructor: "Dr. Helena Park",
-    duration: "4 min",
-    level: "Intro",
-    summary: "See how lessons, quizzes, and instructor feedback come together in a typical Scholaris learning week.",
-    outline: ["Meeting your instructor", "Daily lesson structure", "Practice problems & feedback", "Tracking your progress", "Joining study groups"],
-  },
-  Mathematics: {
-    title: "Mathematics Track",
-    instructor: "Mr. Henderson",
-    duration: "180 lessons",
-    level: "Beginner → Advanced",
-    summary: "Build a rock-solid foundation from arithmetic through multivariable calculus with guided practice every step of the way.",
-    outline: ["Number sense & arithmetic", "Pre-algebra & algebra I", "Geometry & trigonometry", "Algebra II & precalculus", "Calculus I, II, III", "Linear algebra primer"],
-  },
-  Science: {
-    title: "Science Track",
-    instructor: "Dr. Amelia Cho",
-    duration: "142 lessons",
-    level: "Beginner → Intermediate",
-    summary: "Hands-on experiments and clear explanations across the three core sciences.",
-    outline: ["Biology: cells, genetics, ecosystems", "Chemistry: atoms, bonds, reactions", "Physics: mechanics, waves, electricity", "Lab notebook fundamentals", "Scientific writing"],
-  },
-  Literature: {
-    title: "Literature Track",
-    instructor: "Prof. Daniel Rourke",
-    duration: "96 lessons",
-    level: "All levels",
-    summary: "Close reading of classic and contemporary works, with essay-writing workshops every two weeks.",
-    outline: ["The short story tradition", "Shakespeare for modern readers", "19th-century novels", "20th-century American voices", "Contemporary essay writing"],
-  },
-  History: {
-    title: "History Track",
-    instructor: "Dr. Yuki Tanaka",
-    duration: "118 lessons",
-    level: "Beginner → Advanced",
-    summary: "A sweeping survey from ancient Mesopotamia through the 21st century, with primary-source analysis.",
-    outline: ["The ancient world", "Classical empires", "The medieval period", "The early modern era", "The long 19th century", "Modern world history"],
-  },
-  Courses: {
-    title: "Featured Courses This Week",
-    instructor: "Various",
-    duration: "Varies",
-    level: "All levels",
-    summary: "A curated selection of the most-loved courses from our community.",
-    outline: ["Introduction to Algebra — Mr. Henderson", "The Periodic Table Made Simple — Dr. Cho", "Reading Hemingway — Prof. Rourke", "Rome: Rise & Fall — Dr. Tanaka", "Beginner Python — Ms. Alvarez"],
-  },
-  Subjects: {
-    title: "All Subjects",
-    instructor: "Scholaris Faculty",
-    duration: "—",
-    level: "All",
-    summary: "Browse every subject area on the Scholaris platform.",
-    outline: ["Mathematics", "Science", "Literature", "History", "Languages", "Computer Science", "The Arts", "Civics & Economics"],
-  },
-  Teachers: {
-    title: "Meet Our Instructors",
-    instructor: "1,200+ educators",
-    duration: "—",
-    level: "—",
-    summary: "Every Scholaris instructor brings at least a decade of classroom experience.",
-    outline: ["Mr. Henderson — Mathematics", "Dr. Amelia Cho — Chemistry", "Prof. Daniel Rourke — Literature", "Dr. Yuki Tanaka — History", "Ms. Alvarez — Computer Science", "Dr. Helena Park — Onboarding"],
-  },
-  Resources: {
-    title: "Learning Resources",
-    instructor: "—",
-    duration: "—",
-    level: "All",
-    summary: "Free worksheets, lesson plans, and printable study guides to accompany every course.",
-    outline: ["Printable worksheets", "Lesson plans for teachers", "Parent guides", "Study schedules", "Flashcard decks"],
-  },
-  About: {
-    title: "About Scholaris",
-    instructor: "—",
-    duration: "—",
-    level: "—",
-    summary: "Scholaris Learning Institute was founded in 2014 to bring high-quality lessons to every learner, free of charge.",
-    outline: ["Our mission", "Our faculty", "Accreditation", "Annual impact report", "Careers at Scholaris"],
-  },
+  "Browse Courses": { title: "Course Catalog — Fall Term", instructor: "Scholaris Faculty", duration: "Self-paced", level: "All levels", summary: "Explore over 18,000 free lessons across mathematics, science, literature, and history. New modules are added every Monday.", outline: ["Introduction to Algebra (12 lessons)", "Cellular Biology Foundations (9 lessons)", "American Literature: 1850-1925 (15 lessons)", "World History: Bronze Age to Renaissance (22 lessons)", "Intro to Python for Learners (18 lessons)"] },
+  "Watch Demo": { title: "How Scholaris Works — A 4 Minute Tour", instructor: "Dr. Helena Park", duration: "4 min", level: "Intro", summary: "See how lessons, quizzes, and instructor feedback come together in a typical Scholaris learning week.", outline: ["Meeting your instructor", "Daily lesson structure", "Practice problems & feedback", "Tracking your progress", "Joining study groups"] },
+  Mathematics: { title: "Mathematics Track", instructor: "Mr. Henderson", duration: "180 lessons", level: "Beginner → Advanced", summary: "Build a rock-solid foundation from arithmetic through multivariable calculus with guided practice every step of the way.", outline: ["Number sense & arithmetic", "Pre-algebra & algebra I", "Geometry & trigonometry", "Algebra II & precalculus", "Calculus I, II, III", "Linear algebra primer"] },
+  Science: { title: "Science Track", instructor: "Dr. Amelia Cho", duration: "142 lessons", level: "Beginner → Intermediate", summary: "Hands-on experiments and clear explanations across the three core sciences.", outline: ["Biology: cells, genetics, ecosystems", "Chemistry: atoms, bonds, reactions", "Physics: mechanics, waves, electricity", "Lab notebook fundamentals", "Scientific writing"] },
+  Literature: { title: "Literature Track", instructor: "Prof. Daniel Rourke", duration: "96 lessons", level: "All levels", summary: "Close reading of classic and contemporary works, with essay-writing workshops every two weeks.", outline: ["The short story tradition", "Shakespeare for modern readers", "19th-century novels", "20th-century American voices", "Contemporary essay writing"] },
+  History: { title: "History Track", instructor: "Dr. Yuki Tanaka", duration: "118 lessons", level: "Beginner → Advanced", summary: "A sweeping survey from ancient Mesopotamia through the 21st century, with primary-source analysis.", outline: ["The ancient world", "Classical empires", "The medieval period", "The early modern era", "The long 19th century", "Modern world history"] },
+  Courses: { title: "Featured Courses This Week", instructor: "Various", duration: "Varies", level: "All levels", summary: "A curated selection of the most-loved courses from our community.", outline: ["Introduction to Algebra — Mr. Henderson", "The Periodic Table Made Simple — Dr. Cho", "Reading Hemingway — Prof. Rourke", "Rome: Rise & Fall — Dr. Tanaka", "Beginner Python — Ms. Alvarez"] },
+  Subjects: { title: "All Subjects", instructor: "Scholaris Faculty", duration: "—", level: "All", summary: "Browse every subject area on the Scholaris platform.", outline: ["Mathematics", "Science", "Literature", "History", "Languages", "Computer Science", "The Arts", "Civics & Economics"] },
+  Teachers: { title: "Meet Our Instructors", instructor: "1,200+ educators", duration: "—", level: "—", summary: "Every Scholaris instructor brings at least a decade of classroom experience.", outline: ["Mr. Henderson — Mathematics", "Dr. Amelia Cho — Chemistry", "Prof. Daniel Rourke — Literature", "Dr. Yuki Tanaka — History", "Ms. Alvarez — Computer Science", "Dr. Helena Park — Onboarding"] },
+  Resources: { title: "Learning Resources", instructor: "—", duration: "—", level: "All", summary: "Free worksheets, lesson plans, and printable study guides to accompany every course.", outline: ["Printable worksheets", "Lesson plans for teachers", "Parent guides", "Study schedules", "Flashcard decks"] },
+  About: { title: "About Scholaris", instructor: "—", duration: "—", level: "—", summary: "Scholaris Learning Institute was founded in 2014 to bring high-quality lessons to every learner, free of charge.", outline: ["Our mission", "Our faculty", "Accreditation", "Annual impact report", "Careers at Scholaris"] },
 };
 
 const REVIEWERS = [
@@ -117,48 +42,47 @@ const REVIEWERS = [
 
 function Index() {
   const navigate = useNavigate();
+  useA11ySettings(); // bootstrap saved preferences
   const [open, setOpen] = useState(false);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
   const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [panel, setPanel] = useState<FooterPanel>(null);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (PASSWORDS.includes(pw)) {
-      navigate({ to: "/games" });
-    } else {
-      setErr("Incorrect password. Please try again.");
-    }
+    if (PASSWORDS.includes(pw)) navigate({ to: "/games" });
+    else setErr("Incorrect password. Please try again.");
   };
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif">
-      <div className="bg-emerald-900 text-emerald-50 text-xs">
+    <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="bg-emerald-900 text-emerald-50 text-xs dark:bg-emerald-950">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
           <span className="hidden md:inline">Support: help@scholaris-learning.org · +1 (800) 555-0199</span>
         </div>
       </div>
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md transition-colors dark:border-zinc-800 dark:bg-zinc-900/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-emerald-700 text-white font-bold">S</div>
+          <div className="flex items-center gap-2 transition-transform hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-emerald-700 text-white font-bold shadow-md">S</div>
             <div className="leading-tight">
               <div className="text-xl font-bold tracking-tight">Scholaris</div>
-              <div className="text-[10px] uppercase tracking-widest text-slate-500">Learning Institute</div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-zinc-400">Learning Institute</div>
             </div>
           </div>
           <nav className="hidden gap-6 text-sm md:flex">
             {["Courses", "Subjects", "Teachers", "Resources", "About"].map((l) => (
-              <button key={l} onClick={() => openLesson(l)} className="hover:text-emerald-700">{l}</button>
+              <button key={l} onClick={() => openLesson(l)} className="relative transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:scale-x-0 after:bg-emerald-700 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left">{l}</button>
             ))}
           </nav>
           <button
             onClick={() => setOpen(true)}
-            className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+            className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-800 hover:shadow-md hover:-translate-y-0.5"
           >
             Sign In
           </button>
@@ -167,24 +91,24 @@ function Index() {
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid items-center gap-12 md:grid-cols-2">
-          <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-emerald-700">Trusted by 2M+ learners</p>
-            <h1 className="mb-6 text-5xl font-bold leading-tight text-slate-900">
+          <div className="animate-in fade-in slide-in-from-left-8 duration-700">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">Trusted by 2M+ learners</p>
+            <h1 className="mb-6 text-5xl font-bold leading-tight text-slate-900 dark:text-zinc-50">
               Expand your mind, one lesson at a time.
             </h1>
-            <p className="mb-8 text-lg text-slate-600">
+            <p className="mb-8 text-lg text-slate-600 dark:text-zinc-300">
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-emerald-700 px-6 py-3 font-semibold text-white hover:bg-emerald-800">Browse Courses</button>
-              <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 px-6 py-3 font-semibold hover:bg-slate-100">Watch Demo</button>
+              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-emerald-700 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-emerald-800 hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
+              <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 dark:border-zinc-700 px-6 py-3 font-semibold transition-all hover:bg-slate-100 dark:hover:bg-zinc-800 hover:-translate-y-0.5">Watch Demo</button>
             </div>
-            <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500">
+            <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500 dark:text-zinc-400">
               <span>★★★★★ 4.9/5 — 28,401 reviews</span>
               <span>Featured in EdWeek &amp; The Atlantic</span>
             </div>
           </div>
-          <div className="rounded-lg bg-white p-8 shadow-lg">
+          <div className="rounded-lg bg-white dark:bg-zinc-900 p-8 shadow-xl transition-all hover:shadow-2xl animate-in fade-in slide-in-from-right-8 duration-700">
             <div className="mb-4 overflow-hidden rounded" style={{ padding: "75% 0 0 0", position: "relative" }}>
               <iframe
                 src="https://player.vimeo.com/video/490422623?badge=0&autopause=0&player_id=0&app_id=58479"
@@ -196,28 +120,23 @@ function Index() {
               />
             </div>
             <h3 className="font-bold">Featured: Introduction to Algebra</h3>
-            <p className="text-sm text-slate-500">12 lessons · Beginner · Mr. Henderson</p>
+            <p className="text-sm text-slate-500 dark:text-zinc-400">12 lessons · Beginner · Mr. Henderson</p>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-white py-10">
+      <section className="border-y border-slate-200 bg-white py-10 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 text-center md:grid-cols-4">
-          {[
-            ["2.4M+", "Active learners"],
-            ["1,200+", "Expert instructors"],
-            ["18,000", "Free lessons"],
-            ["96%", "Completion rate"],
-          ].map(([n, l]) => (
-            <div key={l}>
-              <div className="text-3xl font-bold text-emerald-800">{n}</div>
-              <div className="mt-1 text-xs uppercase tracking-widest text-slate-500">{l}</div>
+          {[["2.4M+", "Active learners"], ["1,200+", "Expert instructors"], ["18,000", "Free lessons"], ["96%", "Completion rate"]].map(([n, l], i) => (
+            <div key={l} className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "backwards" }}>
+              <div className="text-3xl font-bold text-emerald-800 dark:text-emerald-400">{n}</div>
+              <div className="mt-1 text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">{l}</div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-white py-16">
+      <section className="bg-white py-16 dark:bg-zinc-900">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="mb-10 text-center text-3xl font-bold">Popular Subjects</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -226,104 +145,112 @@ function Index() {
               { t: "Science", d: "Biology, chemistry, physics" },
               { t: "Literature", d: "Classics and modern essays" },
               { t: "History", d: "Ancient to contemporary" },
-            ].map((s) => (
-              <button key={s.t} onClick={() => openLesson(s.t)} className="rounded-lg border border-slate-200 p-6 text-left hover:border-emerald-700">
-                <h3 className="mb-2 font-bold text-slate-900">{s.t}</h3>
-                <p className="text-sm text-slate-600">{s.d}</p>
+            ].map((s, i) => (
+              <button
+                key={s.t}
+                onClick={() => openLesson(s.t)}
+                style={{ animationDelay: `${i * 100}ms`, animationFillMode: "backwards" }}
+                className="rounded-lg border border-slate-200 dark:border-zinc-800 p-6 text-left transition-all hover:-translate-y-1 hover:border-emerald-700 hover:shadow-lg dark:hover:border-emerald-500 dark:hover:shadow-emerald-500/10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+              >
+                <h3 className="mb-2 font-bold text-slate-900 dark:text-zinc-100">{s.t}</h3>
+                <p className="text-sm text-slate-600 dark:text-zinc-400">{s.d}</p>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f8f6f0] py-16">
+      <section className="bg-[#f8f6f0] py-16 dark:bg-zinc-950">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="mb-2 text-center text-3xl font-bold">What our learners say</h2>
-          <p className="mb-10 text-center text-sm text-slate-500">Real feedback from verified Scholaris students</p>
+          <p className="mb-10 text-center text-sm text-slate-500 dark:text-zinc-400">Real feedback from verified Scholaris students</p>
           <div className="grid gap-6 md:grid-cols-3">
-            {REVIEWERS.map((t) => (
-              <figure key={t.n} className="rounded-lg border border-slate-200 bg-white p-6">
+            {REVIEWERS.map((t, i) => (
+              <figure
+                key={t.n}
+                style={{ animationDelay: `${i * 80}ms`, animationFillMode: "backwards" }}
+                className="rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 transition-all hover:-translate-y-1 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500"
+              >
                 <div className="mb-3 flex items-center gap-3">
-                  <img src={t.img} alt={t.n} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
+                  <img src={t.img} alt={t.n} className="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100 dark:ring-emerald-900" loading="lazy" />
                   <div>
-                    <div className="text-sm font-semibold text-slate-900">{t.n}</div>
-                    <div className="text-xs text-slate-500">{t.r}</div>
+                    <div className="text-sm font-semibold text-slate-900 dark:text-zinc-100">{t.n}</div>
+                    <div className="text-xs text-slate-500 dark:text-zinc-400">{t.r}</div>
                   </div>
                 </div>
                 <div className="mb-2 text-amber-500">★★★★★</div>
-                <blockquote className="text-sm text-slate-700">&ldquo;{t.q}&rdquo;</blockquote>
+                <blockquote className="text-sm text-slate-700 dark:text-zinc-300">&ldquo;{t.q}&rdquo;</blockquote>
               </figure>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-white py-10">
+      <section className="border-t border-slate-200 bg-white py-10 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500">As featured in</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400">
-            <span>EdWeek</span>
-            <span>The Atlantic</span>
-            <span>NPR Education</span>
-            <span>UNESCO</span>
-            <span>PBS Learning</span>
-            <span>Khan Foundation</span>
+          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">As featured in</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400 dark:text-zinc-500">
+            {["EdWeek", "The Atlantic", "NPR Education", "UNESCO", "PBS Learning", "Khan Foundation"].map((p) => (
+              <span key={p} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 cursor-default">{p}</span>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
+      <footer className="border-t border-slate-200 dark:border-zinc-800 py-8 text-center text-sm text-slate-500 dark:text-zinc-400">
         <div>© 2026 Scholaris Learning Institute. Empowering education worldwide.</div>
         <div className="mt-2 space-x-4 text-xs">
-          <a href="#" className="hover:text-emerald-700">Privacy</a>
-          <a href="#" className="hover:text-emerald-700">Terms</a>
-          <a href="#" className="hover:text-emerald-700">Accessibility</a>
-          <a href="#" className="hover:text-emerald-700">Contact</a>
+          <button onClick={() => setPanel("privacy")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Privacy</button>
+          <button onClick={() => setPanel("terms")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Terms</button>
+          <button onClick={() => setPanel("accessibility")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Accessibility</button>
+          <button onClick={() => setPanel("contact")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Contact</button>
         </div>
-        <p className="mx-auto mt-6 max-w-3xl px-6 text-[8px] leading-tight text-slate-300">
+        <p className="mx-auto mt-6 max-w-3xl px-6 text-[8px] leading-tight text-slate-300 dark:text-zinc-700">
           Disclaimer: This is not an educational website. All courses, statistics, instructor names, accreditations, partner logos, and reviews shown on this page are fictional and presented for entertainment purposes only. No actual instruction is provided.
         </p>
       </footer>
 
+      <FooterModal panel={panel} onClose={() => setPanel(null)} />
+
       {lesson && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setLesson(null)}>
-          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="mb-1 text-2xl font-bold text-slate-900">{lesson.title}</h2>
-            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-700">{lesson.instructor} · {lesson.duration} · {lesson.level}</p>
-            <p className="mb-4 text-sm text-slate-600">{lesson.summary}</p>
-            <ul className="mb-5 space-y-2 text-sm text-slate-700">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 animate-in fade-in duration-200" onClick={() => setLesson(null)}>
+          <div className="w-full max-w-lg rounded-lg bg-white dark:bg-zinc-900 dark:text-zinc-100 p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300" onClick={(e) => e.stopPropagation()}>
+            <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-zinc-100">{lesson.title}</h2>
+            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-400">{lesson.instructor} · {lesson.duration} · {lesson.level}</p>
+            <p className="mb-4 text-sm text-slate-600 dark:text-zinc-300">{lesson.summary}</p>
+            <ul className="mb-5 space-y-2 text-sm text-slate-700 dark:text-zinc-200">
               {lesson.outline.map((o, i) => (
-                <li key={i} className="flex gap-2"><span className="text-emerald-700">{i + 1}.</span>{o}</li>
+                <li key={i} className="flex gap-2 animate-in fade-in slide-in-from-left-2" style={{ animationDelay: `${i * 50}ms`, animationFillMode: "backwards" }}><span className="text-emerald-700 dark:text-emerald-400">{i + 1}.</span>{o}</li>
               ))}
             </ul>
             <div className="flex gap-2">
-              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-emerald-700 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Enroll Now</button>
-              <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-100">Close</button>
+              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-emerald-700 py-2 text-sm font-semibold text-white transition-all hover:bg-emerald-800 hover:shadow-md">Enroll Now</button>
+              <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 dark:border-zinc-700 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 dark:hover:bg-zinc-800">Close</button>
             </div>
           </div>
         </div>
       )}
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
-          <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 animate-in fade-in duration-200" onClick={() => setOpen(false)}>
+          <div className="w-full max-w-sm rounded-lg bg-white dark:bg-zinc-900 dark:text-zinc-100 p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300" onClick={(e) => e.stopPropagation()}>
             <h2 className="mb-1 text-xl font-bold">Sign in to Scholaris</h2>
-            <p className="mb-4 text-sm text-slate-500">Access your courses and progress.</p>
+            <p className="mb-4 text-sm text-slate-500 dark:text-zinc-400">Access your courses and progress.</p>
             <form onSubmit={submit} className="space-y-3">
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-emerald-700 focus:outline-none"
+                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
               />
               <input
                 type="password"
                 placeholder="Password"
                 value={pw}
                 onChange={(e) => { setPw(e.target.value); setErr(""); }}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-emerald-700 focus:outline-none"
+                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
               />
-              {err && <p className="text-xs text-red-600">{err}</p>}
-              <button type="submit" className="w-full rounded-md bg-emerald-700 py-2 font-semibold text-white hover:bg-emerald-800">
+              {err && <p className="text-xs text-red-600 animate-in fade-in slide-in-from-top-1">{err}</p>}
+              <button type="submit" className="w-full rounded-md bg-emerald-700 py-2 font-semibold text-white transition-all hover:bg-emerald-800 hover:shadow-md">
                 Sign In
               </button>
             </form>
