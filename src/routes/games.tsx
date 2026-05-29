@@ -8,11 +8,11 @@ import escape from "@/assets/game-escape.png";
 import geometry from "@/assets/game-geometry.png";
 import hustle from "@/assets/game-hustle.png";
 import archer from "@/assets/game-archer.png";
-import escapeCity from "@/assets/game-escape-city.jpg";
-import moneyRush from "@/assets/game-money-rush.jpg";
-import escapeRoad from "@/assets/game-escape-road.jpg";
+import escapeCity from "@/assets/game-escape-city.png";
+import moneyRush from "@/assets/game-money-rush.png";
+import escapeRoad from "@/assets/game-escape-road.png";
 import stickmanHook from "@/assets/game-stickman-hook.jpg";
-import escapeRoad2 from "@/assets/game-escape-road-2.jpg";
+import escapeRoad2 from "@/assets/game-escape-road-2.png";
 import jetpack from "@/assets/game-jetpack.jpg";
 
 export const Route = createFileRoute("/games")({
