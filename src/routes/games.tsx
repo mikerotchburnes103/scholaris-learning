@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
+import { useA11ySettings } from "@/lib/a11y";
+import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
 import bowmasters from "@/assets/game-bowmasters.png";
@@ -44,76 +46,86 @@ const games = [
 ];
 
 function Games() {
+  useA11ySettings();
   const [playing, setPlaying] = useState<typeof games[number] | null>(null);
+  const [panel, setPanel] = useState<FooterPanel>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const goFullscreen = () => {
     const el = wrapperRef.current;
     if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      el.requestFullscreen?.();
-    }
+    if (document.fullscreenElement) document.exitFullscreen();
+    else el.requestFullscreen?.();
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur">
+    <div className="relative min-h-screen overflow-hidden bg-zinc-950 text-zinc-100">
+      {/* Animated background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-fuchsia-600/20 blur-3xl animate-pulse" style={{ animationDuration: "6s" }} />
+        <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl animate-pulse" style={{ animationDuration: "8s", animationDelay: "1s" }} />
+        <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl animate-pulse" style={{ animationDuration: "10s", animationDelay: "2s" }} />
+      </div>
+
+      <header className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-900/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-fuchsia-500 to-cyan-400 font-black text-zinc-950">A</div>
-            <span className="text-xl font-bold tracking-tight">Arcade</span>
+          <div className="flex items-center gap-2 transition-transform hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-fuchsia-500 to-cyan-400 font-black text-zinc-950 shadow-lg shadow-fuchsia-500/30">A</div>
+            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">Arcade</span>
           </div>
-          <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-100">Exit</Link>
+          <Link to="/" className="text-sm text-zinc-400 transition-colors hover:text-zinc-100">Exit</Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10">
-        <h1 className="mb-2 text-4xl font-bold">Pick a game</h1>
-        <p className="mb-8 text-zinc-400">{games.length} games available.</p>
+        <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+          <h1 className="mb-2 text-5xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-300 via-pink-200 to-cyan-300 bg-clip-text text-transparent">Pick a game</h1>
+          <p className="text-zinc-400">{games.length} games available · click any title to play.</p>
+        </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {games.map((g) => (
+          {games.map((g, i) => (
             <button
               key={g.name}
               onClick={() => setPlaying(g)}
-              className="group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 text-left transition hover:-translate-y-1 hover:border-fuchsia-500/50 hover:shadow-[0_0_30px_-5px_rgba(217,70,239,0.4)]"
+              style={{ animationDelay: `${i * 40}ms`, animationFillMode: "backwards" }}
+              className="group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 text-left transition-all duration-300 hover:-translate-y-1.5 hover:border-fuchsia-500/60 hover:shadow-[0_10px_40px_-10px_rgba(217,70,239,0.6)] animate-in fade-in zoom-in-95 duration-500"
             >
               <div className="aspect-square overflow-hidden">
-                <img src={g.img} alt={g.name} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+                <img src={g.img} alt={g.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="p-3">
                 <h3 className="truncate text-sm font-semibold">{g.name}</h3>
-                <p className="text-xs text-zinc-500">Play now</p>
+                <p className="text-xs text-zinc-500 transition-colors group-hover:text-fuchsia-400">Play now →</p>
               </div>
             </button>
           ))}
         </div>
       </main>
 
+      <footer className="border-t border-zinc-800 py-8 text-center text-sm text-zinc-500">
+        <div>© 2026 Arcade · A Scholaris side project</div>
+        <div className="mt-2 space-x-4 text-xs">
+          <button onClick={() => setPanel("privacy")} className="transition-colors hover:text-fuchsia-400">Privacy</button>
+          <button onClick={() => setPanel("terms")} className="transition-colors hover:text-fuchsia-400">Terms</button>
+          <button onClick={() => setPanel("accessibility")} className="transition-colors hover:text-fuchsia-400">Accessibility</button>
+          <button onClick={() => setPanel("contact")} className="transition-colors hover:text-fuchsia-400">Contact</button>
+        </div>
+      </footer>
+
+      <FooterModal panel={panel} onClose={() => setPanel(null)} />
+
       {playing && (
-        <div ref={wrapperRef} className="fixed inset-0 z-50 flex flex-col bg-zinc-950">
+        <div ref={wrapperRef} className="fixed inset-0 z-50 flex flex-col bg-zinc-950 animate-in fade-in duration-200">
           <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-2">
             <span className="font-semibold">{playing.name}</span>
             <div className="flex gap-2">
-              <button
-                onClick={goFullscreen}
-                className="rounded-md border border-zinc-700 px-3 py-1 text-xs hover:bg-zinc-800"
-              >
-                Fullscreen
-              </button>
-              <a
-                href={playing.url}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-md border border-zinc-700 px-3 py-1 text-xs hover:bg-zinc-800"
-              >
-                New tab
-              </a>
+              <button onClick={goFullscreen} className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">Fullscreen</button>
+              <a href={playing.url} target="_blank" rel="noreferrer" className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">New tab</a>
               <button
                 onClick={() => { if (document.fullscreenElement) document.exitFullscreen(); setPlaying(null); }}
-                className="rounded-md bg-fuchsia-600 px-3 py-1 text-xs font-semibold hover:bg-fuchsia-500"
+                className="rounded-md bg-fuchsia-600 px-3 py-1 text-xs font-semibold transition hover:bg-fuchsia-500 hover:shadow-md hover:shadow-fuchsia-500/40"
               >
                 Close
               </button>
