@@ -83,7 +83,16 @@ function Index() {
             </div>
           </div>
           <div className="rounded-lg bg-white p-8 shadow-lg">
-            <div className="mb-4 h-40 rounded bg-gradient-to-br from-emerald-100 to-amber-50" />
+            <div className="mb-4 overflow-hidden rounded" style={{ padding: "75% 0 0 0", position: "relative" }}>
+              <iframe
+                src="https://player.vimeo.com/video/490422623?badge=0&autopause=0&player_id=0&app_id=58479"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                title="Spr8.1.1 - Form algebraic expressions"
+              />
+            </div>
             <h3 className="font-bold">Featured: Introduction to Algebra</h3>
             <p className="text-sm text-slate-500">12 lessons · Beginner · Mr. Henderson</p>
           </div>
