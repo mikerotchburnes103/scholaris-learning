@@ -61,7 +61,7 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
-      <div className="bg-emerald-900 text-emerald-50 text-xs dark:bg-emerald-950">
+      <div className="bg-[#10183a] text-amber-50 text-xs dark:bg-[#0a1029]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
           <span className="hidden md:inline">Support: help@scholaris-learning.org · +1 (800) 555-0199</span>
@@ -71,7 +71,7 @@ function Index() {
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md transition-colors dark:border-zinc-800 dark:bg-zinc-900/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2 transition-transform hover:scale-105">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-emerald-700 text-white font-bold shadow-md">S</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#1e2a52] text-white font-bold shadow-md">S</div>
             <div className="leading-tight">
               <div className="text-xl font-bold tracking-tight">Scholaris</div>
               <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-zinc-400">Learning Institute</div>
@@ -79,12 +79,12 @@ function Index() {
           </div>
           <nav className="hidden gap-6 text-sm md:flex">
             {["Courses", "Subjects", "Teachers", "Resources", "About"].map((l) => (
-              <button key={l} onClick={() => openLesson(l)} className="relative transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:scale-x-0 after:bg-emerald-700 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left">{l}</button>
+              <button key={l} onClick={() => openLesson(l)} className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:scale-x-0 after:bg-[#1e2a52] after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left">{l}</button>
             ))}
           </nav>
           <button
             onClick={() => setOpen(true)}
-            className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-800 hover:shadow-md hover:-translate-y-0.5"
+            className="rounded-md bg-[#1e2a52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#162247] hover:shadow-md hover:-translate-y-0.5"
           >
             Sign In
           </button>
@@ -94,7 +94,7 @@ function Index() {
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid items-center gap-12 md:grid-cols-2">
           <div className="animate-in fade-in slide-in-from-left-8 duration-700">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">Trusted by 2M+ learners</p>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#1e2a52] dark:text-amber-300">Trusted by 2M+ learners</p>
             <h1 className="mb-6 text-5xl font-bold leading-tight text-slate-900 dark:text-zinc-50">
               Expand your mind, one lesson at a time.
             </h1>
@@ -102,7 +102,7 @@ function Index() {
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-emerald-700 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-emerald-800 hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
+              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-[#1e2a52] px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#162247] hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
               <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 dark:border-zinc-700 px-6 py-3 font-semibold transition-all hover:bg-slate-100 dark:hover:bg-zinc-800 hover:-translate-y-0.5">Watch Demo</button>
             </div>
             <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500 dark:text-zinc-400">
@@ -131,7 +131,7 @@ function Index() {
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 text-center md:grid-cols-4">
           {[["2.4M+", "Active learners"], ["1,200+", "Expert instructors"], ["18,000", "Free lessons"], ["96%", "Completion rate"]].map(([n, l], i) => (
             <div key={l} className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "backwards" }}>
-              <div className="text-3xl font-bold text-emerald-800 dark:text-emerald-400">{n}</div>
+              <div className="text-3xl font-bold text-[#162247] dark:text-amber-300">{n}</div>
               <div className="mt-1 text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">{l}</div>
             </div>
           ))}
@@ -152,7 +152,7 @@ function Index() {
                 key={s.t}
                 onClick={() => openLesson(s.t)}
                 style={{ animationDelay: `${i * 100}ms`, animationFillMode: "backwards" }}
-                className="rounded-lg border border-slate-200 dark:border-zinc-800 p-6 text-left transition-all hover:-translate-y-1 hover:border-emerald-700 hover:shadow-lg dark:hover:border-emerald-500 dark:hover:shadow-emerald-500/10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+                className="rounded-lg border border-slate-200 dark:border-zinc-800 p-6 text-left transition-all hover:-translate-y-1 hover:border-[#1e2a52] hover:shadow-lg dark:hover:border-amber-400 dark:hover:shadow-amber-400/10 animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
                 <h3 className="mb-2 font-bold text-slate-900 dark:text-zinc-100">{s.t}</h3>
                 <p className="text-sm text-slate-600 dark:text-zinc-400">{s.d}</p>
@@ -174,7 +174,7 @@ function Index() {
                 className="rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 transition-all hover:-translate-y-1 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <img src={t.img} alt={t.n} className="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100 dark:ring-emerald-900" loading="lazy" />
+                  <img src={t.img} alt={t.n} className="h-12 w-12 rounded-full object-cover ring-2 ring-amber-100 dark:ring-[#10183a]" loading="lazy" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-zinc-100">{t.n}</div>
                     <div className="text-xs text-slate-500 dark:text-zinc-400">{t.r}</div>
@@ -193,7 +193,7 @@ function Index() {
           <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">As featured in</p>
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400 dark:text-zinc-500">
             {["EdWeek", "The Atlantic", "NPR Education", "UNESCO", "PBS Learning", "Khan Foundation"].map((p) => (
-              <span key={p} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 cursor-default">{p}</span>
+              <span key={p} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 cursor-default">{p}</span>
             ))}
           </div>
         </div>
@@ -202,10 +202,10 @@ function Index() {
       <footer className="border-t border-slate-200 dark:border-zinc-800 py-8 text-center text-sm text-slate-500 dark:text-zinc-400">
         <div>© 2026 Scholaris Learning Institute. Empowering education worldwide.</div>
         <div className="mt-2 space-x-4 text-xs">
-          <button onClick={() => setPanel("privacy")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Privacy</button>
-          <button onClick={() => setPanel("terms")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Terms</button>
-          <button onClick={() => setPanel("accessibility")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Accessibility</button>
-          <button onClick={() => setPanel("contact")} className="transition-colors hover:text-emerald-700 dark:hover:text-emerald-400">Contact</button>
+          <button onClick={() => setPanel("privacy")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Privacy</button>
+          <button onClick={() => setPanel("terms")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Terms</button>
+          <button onClick={() => setPanel("accessibility")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Accessibility</button>
+          <button onClick={() => setPanel("contact")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Contact</button>
         </div>
         <p className="mx-auto mt-6 max-w-3xl px-6 text-[8px] leading-tight text-slate-300 dark:text-zinc-700">
           Disclaimer: This is not an educational website. All courses, statistics, instructor names, accreditations, partner logos, and reviews shown on this page are fictional and presented for entertainment purposes only. No actual instruction is provided.
@@ -218,15 +218,15 @@ function Index() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 animate-in fade-in duration-200" onClick={() => setLesson(null)}>
           <div className="w-full max-w-lg rounded-lg bg-white dark:bg-zinc-900 dark:text-zinc-100 p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300" onClick={(e) => e.stopPropagation()}>
             <h2 className="mb-1 text-2xl font-bold text-slate-900 dark:text-zinc-100">{lesson.title}</h2>
-            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-400">{lesson.instructor} · {lesson.duration} · {lesson.level}</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-[#1e2a52] dark:text-amber-300">{lesson.instructor} · {lesson.duration} · {lesson.level}</p>
             <p className="mb-4 text-sm text-slate-600 dark:text-zinc-300">{lesson.summary}</p>
             <ul className="mb-5 space-y-2 text-sm text-slate-700 dark:text-zinc-200">
               {lesson.outline.map((o, i) => (
-                <li key={i} className="flex gap-2 animate-in fade-in slide-in-from-left-2" style={{ animationDelay: `${i * 50}ms`, animationFillMode: "backwards" }}><span className="text-emerald-700 dark:text-emerald-400">{i + 1}.</span>{o}</li>
+                <li key={i} className="flex gap-2 animate-in fade-in slide-in-from-left-2" style={{ animationDelay: `${i * 50}ms`, animationFillMode: "backwards" }}><span className="text-[#1e2a52] dark:text-amber-300">{i + 1}.</span>{o}</li>
               ))}
             </ul>
             <div className="flex gap-2">
-              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-emerald-700 py-2 text-sm font-semibold text-white transition-all hover:bg-emerald-800 hover:shadow-md">Enroll Now</button>
+              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-[#1e2a52] py-2 text-sm font-semibold text-white transition-all hover:bg-[#162247] hover:shadow-md">Enroll Now</button>
               <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 dark:border-zinc-700 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 dark:hover:bg-zinc-800">Close</button>
             </div>
           </div>
@@ -242,17 +242,17 @@ function Index() {
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-[#1e2a52] focus:outline-none focus:ring-2 focus:ring-[#1e2a52]/20"
               />
               <input
                 type="password"
                 placeholder="Password"
                 value={pw}
                 onChange={(e) => { setPw(e.target.value); setErr(""); }}
-                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20"
+                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-[#1e2a52] focus:outline-none focus:ring-2 focus:ring-[#1e2a52]/20"
               />
               {err && <p className="text-xs text-red-600 animate-in fade-in slide-in-from-top-1">{err}</p>}
-              <button type="submit" className="w-full rounded-md bg-emerald-700 py-2 font-semibold text-white transition-all hover:bg-emerald-800 hover:shadow-md">
+              <button type="submit" className="w-full rounded-md bg-[#1e2a52] py-2 font-semibold text-white transition-all hover:bg-[#162247] hover:shadow-md">
                 Sign In
               </button>
             </form>
