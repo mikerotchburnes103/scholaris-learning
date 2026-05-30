@@ -1,8 +1,5 @@
-Done:
 
-```json
-{
-  "_comment": "Drop new games here! Add { name, url, img, genre, device, added } and put the HTML in /public/games/ and the thumbnail in /public/games/thumbs/. device must be 'mobile+pc' or 'pc'. added is YYYY-MM-DD.",
+{  "_comment": "Drop new games here! Add { name, url, img, genre, device, added } and put the HTML in /public/games/ and the thumbnail in /public/games/thumbs/. device must be 'mobile+pc' or 'pc'. added is YYYY-MM-DD.",
   "games": [
     {
       "name": "Space Waves",
