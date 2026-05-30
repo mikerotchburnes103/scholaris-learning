@@ -70,8 +70,9 @@ function Index() {
 
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md transition-colors dark:border-zinc-800 dark:bg-zinc-900/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2 transition-transform hover:scale-105">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#1e2a52] text-white font-bold shadow-md">S</div>
+          <div className="flex items-center gap-2.5 transition-transform duration-300 hover:scale-105">
+            <img src={logo} alt="Scholaris" className="h-10 w-10 rounded-lg shadow-md ring-1 ring-black/5 animate-in fade-in zoom-in-90 duration-700" />
+
             <div className="leading-tight">
               <div className="text-xl font-bold tracking-tight">Scholaris</div>
               <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-zinc-400">Learning Institute</div>
