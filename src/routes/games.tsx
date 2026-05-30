@@ -26,7 +26,7 @@ import doki from "@/assets/game-doki.webp";
 import panicBtn from "@/assets/panic-button.png";
 
 export const Route = createFileRoute("/games")({
-  head: () => ({ meta: [{ title: "Arcade" }] }),
+  head: () => ({ meta: [{ title: "Education — Scholaris" }] }),
   component: Games,
 });
 
@@ -40,7 +40,7 @@ const games: Game[] = [
   { name: "Ragdoll Hit", img: knight, url: "/games/ragdoll-hit.html", genre: "Action", device: "mobile+pc", added: "2026-01-18" },
   { name: "Escape Road 3", img: escape, url: "/games/escape-road-3.html", genre: "Racing", device: "mobile+pc", added: "2026-02-01" },
   { name: "Geometry Dash", img: geometry, url: "/games/geometry-dash.html", genre: "Rhythm", device: "mobile+pc", added: "2026-02-05" },
-  { name: "Your Only Move Is Hustle", img: hustle, url: "/games/yomi-hustle.html", genre: "Fighting", device: "pc", added: "2026-02-10" },
+  { name: "Your Only Move Is Hustle", img: hustle, url: "/games/yomi-hustle.html", genre: "Fighting", device: "mobile+pc", added: "2026-02-10" },
   { name: "Ragdoll Archers", img: archer, url: "/games/ragdoll-archers.html", genre: "Action", device: "mobile+pc", added: "2026-02-14" },
   { name: "Escape Road City 2", img: escapeCity, url: "/games/escape-road-city-2.html", genre: "Racing", device: "mobile+pc", added: "2026-02-20" },
   { name: "Money Rush", img: moneyRush, url: "/games/money-rush.html", genre: "Casual", device: "mobile+pc", added: "2026-03-01" },
@@ -68,6 +68,7 @@ function Games() {
   const [panel, setPanel] = useState<FooterPanel>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>("date");
+  const [extraGames, setExtraGames] = useState<Game[]>([]);
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
@@ -78,14 +79,29 @@ function Games() {
     window.localStorage.setItem(PANIC_KEY, panicUrl);
   }, [panicUrl]);
 
+  // Load drop-in games from /public/games/manifest.json
+  useEffect(() => {
+    fetch("/games/manifest.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && Array.isArray(data.games)) setExtraGames(data.games as Game[]);
+      })
+      .catch(() => {});
+  }, []);
+
   const sorted = useMemo(() => {
-    const arr = [...games];
+    const seen = new Set<string>();
+    const arr = [...games, ...extraGames].filter((g) => {
+      if (seen.has(g.url)) return false;
+      seen.add(g.url);
+      return true;
+    });
     if (sort === "az") arr.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === "genre") arr.sort((a, b) => a.genre.localeCompare(b.genre) || a.name.localeCompare(b.name));
     else if (sort === "device") arr.sort((a, b) => a.device.localeCompare(b.device) || a.name.localeCompare(b.name));
     else if (sort === "date") arr.sort((a, b) => b.added.localeCompare(a.added));
     return arr;
-  }, [sort]);
+  }, [sort, extraGames]);
 
   const goFullscreen = () => {
     const el = wrapperRef.current;
@@ -133,7 +149,7 @@ function Games() {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between animate-in fade-in slide-in-from-top-4 duration-500">
           <div>
             <h1 className="mb-2 text-5xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-300 via-pink-200 to-cyan-300 bg-clip-text text-transparent">Pick a game</h1>
-            <p className="text-zinc-400">{games.length} games available · click any title to play.</p>
+            <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
           </div>
           <label className="flex items-center gap-2 text-xs text-zinc-400">
             Sort by
