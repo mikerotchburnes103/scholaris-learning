@@ -151,6 +151,22 @@
       "genre": "Platformer",
       "device": "pc",
       "added": "2026-05-30"
+    },
+    {
+      "name": "Brotato",
+      "url": "/games/brotato.html",
+      "img": "/games/thumbs/brotato.jpeg",
+      "genre": "Roguelite",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Balatro",
+      "url": "/games/balatro.html",
+      "img": "/games/thumbs/balatro.jpeg",
+      "genre": "Card",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
     }
   ]
 }
