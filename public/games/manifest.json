@@ -44,7 +44,7 @@
     {
       "name": "Cookie Clicker",
       "url": "/games/cookie-clicker.html",
-      "img": "/games/thumbs/cookie-clicker.webp",
+      "img": "/games/thumbs/cookie-clicker.png",
       "genre": "Idle",
       "device": "mobile+pc",
       "added": "2026-05-30"
@@ -60,8 +60,40 @@
     {
       "name": "Gunspin",
       "url": "/games/gunspin.html",
-      "img": "/games/thumbs/gun-spin.png",
+      "img": "/games/thumbs/gunspin.png",
       "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Gladihoppers",
+      "url": "/games/gladihoppers.html",
+      "img": "/games/thumbs/gladihoppers.png",
+      "genre": "Fighting",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Johnny Upgrade",
+      "url": "/games/johnny-upgrade.html",
+      "img": "/games/thumbs/johnny-upgrade.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "ADOFAI",
+      "url": "/games/adofai.html",
+      "img": "/games/thumbs/adofai.png",
+      "genre": "Rhythm",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "CSGO Clicker",
+      "url": "/games/csgo-clicker.html",
+      "img": "/games/thumbs/csgo-clicker.png",
+      "genre": "Idle",
       "device": "mobile+pc",
       "added": "2026-05-30"
     }
