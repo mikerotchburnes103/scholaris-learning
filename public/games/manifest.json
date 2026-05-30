@@ -24,6 +24,14 @@
       "genre": "Strategy",
       "device": "pc",
       "added": "2026-05-30"
+    },
+    {
+      "name": "Orange Roulette",
+      "url": "/games/orange-roulette.html",
+      "img": "/games/thumbs/orange-roulette.png",
+      "genre": "Chance",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
     }
   ]
 }
