@@ -1,5 +1,7 @@
+Fair enough, probably the actual file is named `gun-spin.png`. Here it is with that reverted:
+
+```json
 {
-  "_comment": "Drop new games here! Add { name, url, img, genre, device, added } and put the HTML in /public/games/ and the thumbnail in /public/games/thumbs/. device must be 'mobile+pc' or 'pc'. added is YYYY-MM-DD.",
   "games": [
     {
       "name": "Space Waves",
@@ -155,3 +157,4 @@
     }
   ]
 }
+```
