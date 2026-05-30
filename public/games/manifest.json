@@ -1,0 +1,29 @@
+{
+  "_comment": "Drop new games here! Add { name, url, img, genre, device, added } and put the HTML in /public/games/ and the thumbnail in /public/games/thumbs/. device must be 'mobile+pc' or 'pc'. added is YYYY-MM-DD.",
+  "games": [
+    {
+      "name": "Space Waves",
+      "url": "/games/space-waves.html",
+      "img": "/games/thumbs/space-waves.jpeg",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Chat Bot AI",
+      "url": "/games/chat-bot-ai.html",
+      "img": "/games/thumbs/chat-bot-ai.png",
+      "genre": "Toy",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Jacksmith",
+      "url": "/games/jacksmith.html",
+      "img": "/games/thumbs/jacksmith.jpeg",
+      "genre": "Strategy",
+      "device": "pc",
+      "added": "2026-05-30"
+    }
+  ]
+}
