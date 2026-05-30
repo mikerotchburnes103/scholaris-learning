@@ -1,3 +1,6 @@
+Done:
+
+```json
 {
   "_comment": "Drop new games here! Add { name, url, img, genre, device, added } and put the HTML in /public/games/ and the thumbnail in /public/games/thumbs/. device must be 'mobile+pc' or 'pc'. added is YYYY-MM-DD.",
   "games": [
@@ -95,6 +98,62 @@
       "img": "/games/thumbs/csgo-clicker.png",
       "genre": "Idle",
       "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Dadish",
+      "url": "/games/dadish.html",
+      "img": "/games/thumbs/dadish.png",
+      "genre": "Platformer",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Minecraft PE",
+      "url": "/games/minecraft-pe.html",
+      "img": "/games/thumbs/minecraft-pe.png",
+      "genre": "Sandbox",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Stardew Valley",
+      "url": "/games/stardew-valley.html",
+      "img": "/games/thumbs/stardew-valley.png",
+      "genre": "Simulation",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Cut the Rope",
+      "url": "/games/cut-the-rope.html",
+      "img": "/games/thumbs/cut-the-rope.png",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "The Impossible Quiz",
+      "url": "/games/impossible-quiz.html",
+      "img": "/games/thumbs/impossible-quiz.png",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "The Impossible Quiz 2",
+      "url": "/games/impossible-quiz-2.html",
+      "img": "/games/thumbs/impossible-quiz-2.jpeg",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Celeste Classic",
+      "url": "/games/celeste-pico.html",
+      "img": "/games/thumbs/celeste-pico.png",
+      "genre": "Platformer",
+      "device": "pc",
       "added": "2026-05-30"
     }
   ]
