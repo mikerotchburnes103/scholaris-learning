@@ -1,6 +1,4 @@
-Fair enough, probably the actual file is named `gun-spin.png`. Here it is with that reverted:
 
-```json
 {
   "games": [
     {
@@ -157,4 +155,4 @@ Fair enough, probably the actual file is named `gun-spin.png`. Here it is with t
     }
   ]
 }
-```
+
