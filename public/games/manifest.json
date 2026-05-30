@@ -32,6 +32,11 @@
       "genre": "Chance",
       "device": "mobile+pc",
       "added": "2026-05-30"
-    }
-  ]
-}
+    },
+    {
+  "name": "Mario 64",
+  "url": "/games/mario-64.html",
+  "img": "/games/thumbs/mario-64.jpeg",
+  "genre": "Adventure",
+  "device": "pc",
+  "added": "2026-05-30"
