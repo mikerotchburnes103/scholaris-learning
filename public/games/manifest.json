@@ -22,7 +22,7 @@
       "url": "/games/jacksmith.html",
       "img": "/games/thumbs/jacksmith.jpeg",
       "genre": "Strategy",
-      "device": "pc",
+      "device": "mobile+pc",
       "added": "2026-05-30"
     },
     {
@@ -34,9 +34,36 @@
       "added": "2026-05-30"
     },
     {
-  "name": "Mario 64",
-  "url": "/games/mario-64.html",
-  "img": "/games/thumbs/mario-64.jpeg",
-  "genre": "Adventure",
-  "device": "pc",
-  "added": "2026-05-30"
+      "name": "Mario 64",
+      "url": "/games/mario-64.html",
+      "img": "/games/thumbs/mario-64.jpeg",
+      "genre": "Adventure",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Cookie Clicker",
+      "url": "/games/cookie-clicker.html",
+      "img": "/games/thumbs/cookie-clicker.webp",
+      "genre": "Idle",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Getting Over It",
+      "url": "/games/getting-over-it.html",
+      "img": "/games/thumbs/getting-over-it.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Gunspin",
+      "url": "/games/gunspin.html",
+      "img": "/games/thumbs/gun-spin.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    }
+  ]
+}
