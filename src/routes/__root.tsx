@@ -28,7 +28,6 @@ function NotFoundComponent() {
           </Link>
         </div>
       </div>
-    </div>
   );
 }
 
