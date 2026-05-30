@@ -69,10 +69,11 @@ function Games() {
 
       <header className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-900/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2 transition-transform hover:scale-105">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-fuchsia-500 to-cyan-400 font-black text-zinc-950 shadow-lg shadow-fuchsia-500/30">A</div>
+          <div className="flex items-center gap-2.5 transition-transform hover:scale-105">
+            <img src="/scholaris-logo.png" alt="Scholaris" className="hidden h-9 w-9 rounded-md shadow-lg shadow-fuchsia-500/20" />
             <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">Arcade</span>
           </div>
+
           <Link to="/" className="text-sm text-zinc-400 transition-colors hover:text-zinc-100">Exit</Link>
         </div>
       </header>
