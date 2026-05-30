@@ -155,7 +155,7 @@
     {
       "name": "Brotato",
       "url": "/games/brotato.html",
-      "img": "/games/thumbs/brotato.jpeg",
+      "img": "/games/thumbs/brotato.png",
       "genre": "Roguelite",
       "device": "pc",
       "added": "2026-05-30"
@@ -163,10 +163,35 @@
     {
       "name": "Balatro",
       "url": "/games/balatro.html",
-      "img": "/games/thumbs/balatro.jpeg",
+      "img": "/games/thumbs/balatro.png",
       "genre": "Card",
       "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Buckshot Roulette",
+      "url": "/games/buckshot-roulette.html",
+      "img": "/games/thumbs/buckshot-roulette.png",
+      "genre": "Horror",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Pizza Tower",
+      "url": "/games/pizza-tower.html",
+      "img": "/games/thumbs/pizza-tower.png",
+      "genre": "Platformer",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Antonblast",
+      "url": "/games/antonblast.html",
+      "img": "/games/thumbs/antonblast.png",
+      "genre": "Arcade",
+      "device": "pc",
       "added": "2026-05-30"
     }
   ]
 }
+```
