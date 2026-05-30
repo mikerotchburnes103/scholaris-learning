@@ -55,7 +55,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try again
           </button>
-          <a
+          
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
@@ -73,15 +73,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Scholaris | Learning made easy" },
-      { name: "description", content: ""Scholaris Education is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
-      { name: "author", content: "Lovable" },
+      { name: "description", content: "Scholaris Learning is an educational platform designed to make learning easy, engaging, and accessible for students of all ages." },
+      { name: "author", content: "Scholaris" },
       { property: "og:title", content: "Scholaris | Learning made easy" },
-      { property: "og:description", content: "Scholaris Education is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
+      { property: "og:description", content: "Scholaris Learning is an educational platform designed to make learning easy, engaging, and accessible for students of all ages." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@Scholaris" },
       { name: "twitter:title", content: "Scholaris | Learning made easy" },
-      { name: "twitter:description", content: "Scholaris Education is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
+      { name: "twitter:description", content: "Scholaris Learning is an educational platform designed to make learning easy, engaging, and accessible for students of all ages." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/a6NbtNOfTWcsk5E8dmEMKjAv3wc2/social-images/social-1780076055506-ChatGPT_Image_May_29__2026_at_06_32_28_PM-removebg-preview.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/a6NbtNOfTWcsk5E8dmEMKjAv3wc2/social-images/social-1780076055506-ChatGPT_Image_May_29__2026_at_06_32_28_PM-removebg-preview.webp" },
     ],
