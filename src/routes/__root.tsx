@@ -73,7 +73,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Scholaris | Learning made easy" },
-      { name: "description", content: ""Scholaris Learning is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
+      { name: "description", content: ""Scholaris Education is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Scholaris | Learning made easy" },
       { property: "og:description", content: "Scholaris Education is an educational platform designed to make learning easy, engaging, and accessible for students of all ages."},
