@@ -97,8 +97,10 @@ function Index() {
           <div className="animate-in fade-in slide-in-from-left-8 duration-700">
             <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#1e2a52] dark:text-amber-300">Trusted by 2M+ learners</p>
             <h1 className="mb-6 text-5xl font-bold leading-tight text-slate-900 dark:text-zinc-50">
-              Expand your mind, one lesson at a time.
+              Expand your mind,<br />
+              <span className="bg-gradient-to-r from-[#1e2a52] via-[#2d3f7a] to-amber-500 bg-clip-text text-transparent">one lesson at a time.</span>
             </h1>
+
             <p className="mb-8 text-lg text-slate-600 dark:text-zinc-300">
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
