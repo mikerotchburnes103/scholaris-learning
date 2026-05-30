@@ -191,6 +191,46 @@
       "genre": "Arcade",
       "device": "pc",
       "added": "2026-05-30"
+    },
+    {
+      "name": "OMORI",
+      "url": "/games/omori.html",
+      "img": "/games/thumbs/omori.png",
+      "genre": "RPG",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Crazy Cattle 3D",
+      "url": "/games/crazycattle3d.html",
+      "img": "/games/thumbs/crazycattle3d.png",
+      "genre": "Arcade",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Minesweeper Plus",
+      "url": "/games/minesweeper-plus.html",
+      "img": "/games/thumbs/minesweeper-plus.png",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "Yume Nikki",
+      "url": "/games/yume-nikki.html",
+      "img": "/games/thumbs/yume-nikki.png",
+      "genre": "Adventure",
+      "device": "pc",
+      "added": "2026-05-30"
+    },
+    {
+      "name": "ULTRAKILL",
+      "url": "/games/ultrakill.html",
+      "img": "/games/thumbs/ultrakill.png",
+      "genre": "Shooter",
+      "device": "pc",
+      "added": "2026-05-30"
     }
   ]
 }
