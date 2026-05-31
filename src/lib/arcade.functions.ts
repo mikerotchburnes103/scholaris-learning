@@ -18,7 +18,7 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
     }
     setResponseHeaders(
       new Headers({
-        "Set-Cookie": `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`,
+        "Set-Cookie": `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
       }),
     );
     return { ok: true as const };
