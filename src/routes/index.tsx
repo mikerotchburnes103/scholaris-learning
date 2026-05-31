@@ -272,6 +272,8 @@ function Index() {
             </form>
           </div>
         </div>
+      )}
+
       {arcadeOpen && (
         <div className="fixed inset-0 z-[100] overflow-auto">
           <ArcadeApp onExit={() => setArcadeOpen(false)} />
