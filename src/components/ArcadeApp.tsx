@@ -278,7 +278,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             <span className="font-semibold">{playing.name}</span>
             <div className="flex gap-2">
               <button onClick={goFullscreen} className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">Fullscreen</button>
-              <a href={playing.url} target="_blank" rel="noreferrer" className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">New tab</a>
+              <button onClick={() => openInNewTab(playing)} className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">New tab</button>
               <button
                 onClick={goHome}
                 className="rounded-md bg-fuchsia-600 px-3 py-1 text-xs font-semibold transition hover:bg-fuchsia-500"
@@ -301,9 +301,9 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
         onClick={goHome}
         title="Back to library"
         aria-label="Back to library"
-        className="fixed bottom-4 left-4 z-[70] flex h-12 w-12 items-center justify-center rounded-full border border-fuchsia-500/40 bg-zinc-900/90 text-xl shadow-lg shadow-fuchsia-500/30 backdrop-blur-md transition hover:scale-110 hover:border-fuchsia-400 hover:bg-zinc-800"
+        className="fixed bottom-4 left-4 z-[70] flex h-12 w-12 items-center justify-center rounded-full border border-fuchsia-500/40 bg-zinc-900/90 shadow-lg shadow-fuchsia-500/30 backdrop-blur-md transition hover:scale-110 hover:border-fuchsia-400 hover:bg-zinc-800"
       >
-        🏠
+        <img src={homeIcon} alt="" className="h-5 w-5 object-contain invert" />
       </button>
 
       {/* Panic button — raised above the Lovable badge */}
