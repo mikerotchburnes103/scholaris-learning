@@ -1,8 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { verifyArcadePassword } from "@/lib/arcade.functions";
+import { ArcadeApp } from "@/components/ArcadeApp";
 import logo from "@/assets/scholaris-logo.png";
 
 
@@ -44,24 +45,29 @@ const REVIEWERS = [
 ];
 
 function Index() {
-  const navigate = useNavigate();
   useA11ySettings(); // bootstrap saved preferences
   const [open, setOpen] = useState(false);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [panel, setPanel] = useState<FooterPanel>(null);
+  const [arcadeOpen, setArcadeOpen] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await verifyArcadePassword({ data: { password: pw } });
-      if (res.ok) navigate({ to: "/games" });
-      else setErr("Incorrect password. Please try again.");
+      if (res.ok) {
+        setOpen(false);
+        setPw("");
+        setErr("");
+        setArcadeOpen(true);
+      } else setErr("Incorrect password. Please try again.");
     } catch {
       setErr("Could not verify password. Please try again.");
     }
   };
+
 
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
@@ -265,6 +271,12 @@ function Index() {
               </button>
             </form>
           </div>
+        </div>
+      )}
+
+      {arcadeOpen && (
+        <div className="fixed inset-0 z-[100] overflow-auto">
+          <ArcadeApp onExit={() => setArcadeOpen(false)} />
         </div>
       )}
     </div>
