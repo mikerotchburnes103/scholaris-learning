@@ -149,7 +149,7 @@
       "url": "/games/celeste-pico.html",
       "img": "/games/thumbs/celeste-pico.png",
       "genre": "Platformer",
-      "device": "mobile+pc",
+      "device": "pc",
       "added": "2026-05-30"
     },
     {
@@ -293,7 +293,23 @@
       "url": "/games/minecraft-tower-defense.html",
       "img": "/games/thumbs/minecraft-tower-defense.jpeg",
       "genre": "Strategy",
-      "device": "mobile+pc",
+      "device": "pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "The Binding of Isaac Demo",
+      "url": "/games/tboi-demo.html",
+      "img": "/games/thumbs/tboi-demo.webp",
+      "genre": "Roguelike",
+      "device": "pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "The Binding of Isaac: Wrath of the Lamb",
+      "url": "/games/tboi-wrath-of-the-lamb.html",
+      "img": "/games/thumbs/tboi-wrath-of-the-lamb.webp",
+      "genre": "Roguelike",
+      "device": "pc",
       "added": "2026-05-31"
     }
   ]
