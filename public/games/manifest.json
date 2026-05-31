@@ -247,6 +247,14 @@
       "genre": "Arcade",
       "device": "mobile+pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Karlson",
+      "url": "/games/karlson.html",
+      "img": "/games/thumbs/karlson.png",
+      "genre": "Shooter",
+      "device": "pc",
+      "added": "2026-05-31"
     }
   ]
 }
