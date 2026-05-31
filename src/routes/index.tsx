@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
+import { verifyArcadePassword } from "@/lib/arcade.functions";
 import logo from "@/assets/scholaris-logo.png";
 
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const PASSWORDS = ["nofemboys", "femboy", "8008"];
+
 
 type Lesson = { title: string; instructor: string; duration: string; level: string; summary: string; outline: string[] };
 
@@ -51,11 +52,17 @@ function Index() {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [panel, setPanel] = useState<FooterPanel>(null);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (PASSWORDS.includes(pw)) navigate({ to: "/games" });
-    else setErr("Incorrect password. Please try again.");
+    try {
+      const res = await verifyArcadePassword({ data: { password: pw } });
+      if (res.ok) navigate({ to: "/games" });
+      else setErr("Incorrect password. Please try again.");
+    } catch {
+      setErr("Could not verify password. Please try again.");
+    }
   };
+
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
 
@@ -210,10 +217,8 @@ function Index() {
           <button onClick={() => setPanel("accessibility")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Accessibility</button>
           <button onClick={() => setPanel("contact")} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Contact</button>
         </div>
-        <p className="mx-auto mt-6 max-w-3xl px-6 text-[8px] leading-tight text-slate-300 dark:text-zinc-700">
-          Disclaimer: This is not an educational website. All courses, statistics, instructor names, accreditations, partner logos, and reviews shown on this page are fictional and presented for entertainment purposes only. No actual instruction is provided.
-        </p>
       </footer>
+
 
       <FooterModal panel={panel} onClose={() => setPanel(null)} />
 

@@ -1,7 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
+import { checkArcadeAuth } from "@/lib/arcade.functions";
+
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
 import bowmasters from "@/assets/game-bowmasters.png";
@@ -27,8 +29,13 @@ import panicBtn from "@/assets/panic-button.png";
 
 export const Route = createFileRoute("/games")({
   head: () => ({ meta: [{ title: "Education — Scholaris" }] }),
+  beforeLoad: async () => {
+    const { authorized } = await checkArcadeAuth();
+    if (!authorized) throw redirect({ to: "/" });
+  },
   component: Games,
 });
+
 
 type Device = "mobile+pc" | "pc";
 type Game = { name: string; img: string; url: string; genre: string; device: Device; added: string };
