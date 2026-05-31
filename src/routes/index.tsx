@@ -1,8 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { verifyArcadePassword } from "@/lib/arcade.functions";
+import { ArcadeApp } from "@/components/ArcadeApp";
 import logo from "@/assets/scholaris-logo.png";
 
 
