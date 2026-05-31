@@ -24,6 +24,7 @@ import bitlife from "@/assets/game-bitlife.png";
 import subway from "@/assets/game-subway.webp";
 import doki from "@/assets/game-doki.webp";
 import panicBtn from "@/assets/panic-button.png";
+import homeIcon from "@/assets/home-icon.png";
 
 type Device = "mobile+pc" | "pc";
 type Game = { name: string; img: string; url: string; genre: string; device: Device; added: string };
@@ -50,7 +51,7 @@ const games: Game[] = [
   { name: "BitLife", img: bitlife, url: "/games/bitlife.html", genre: "Simulation", device: "mobile+pc", added: "2026-05-22" },
   { name: "Subway Surfers: Beijing", img: subway, url: "/games/subway-surfers-beijing.html", genre: "Arcade", device: "mobile+pc", added: "2026-05-25" },
   { name: "Doki Doki Literature Club", img: doki, url: "/games/doki-doki.html", genre: "Visual Novel", device: "mobile+pc", added: "2026-05-28" },
-  { name: "Soundboard", img: "/game-soundboard.svg", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
+  { name: "Meme Soundboard Ultimate", img: "/games/thumbs/soundboard.webp", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
 ];
 
 type SortKey = "az" | "genre" | "device" | "date" | "plays";
