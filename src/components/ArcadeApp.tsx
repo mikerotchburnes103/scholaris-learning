@@ -57,6 +57,7 @@ const games: Game[] = [
 type SortKey = "az" | "genre" | "device" | "date" | "plays";
 const PANIC_KEY = "arcade.panicUrl";
 const PLAYS_KEY = "arcade.plays";
+const BLANK_KEY = "arcade.openInBlank";
 
 const readPlays = (): Record<string, number> => {
   if (typeof window === "undefined") return {};
@@ -76,10 +77,25 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
   });
+  const [openInBlank, setOpenInBlank] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(BLANK_KEY) === "1";
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panicUrlRef = useRef(panicUrl);
 
   useEffect(() => { panicUrlRef.current = panicUrl; window.localStorage.setItem(PANIC_KEY, panicUrl); }, [panicUrl]);
+  useEffect(() => { window.localStorage.setItem(BLANK_KEY, openInBlank ? "1" : "0"); }, [openInBlank]);
+
+  const openInNewTab = (g: Game) => {
+    if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
+    const w = window.open("about:blank", "_blank");
+    if (!w) return;
+    const src = new URL(g.url, window.location.origin).href;
+    w.document.open();
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${g.name}</title><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`);
+    w.document.close();
+  };
 
   // Lock body scroll while playing
   useEffect(() => {
