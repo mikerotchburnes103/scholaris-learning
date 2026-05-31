@@ -343,6 +343,46 @@
       "genre": "Strategy",
       "device": "mobile+pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Angry Birds",
+      "url": "/games/angry-birds.html",
+      "img": "/games/thumbs/angry-birds.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Angry Birds 2",
+      "url": "/games/angry-birds-2.html",
+      "img": "/games/thumbs/angry-birds-2.webp",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Angry Birds Showdown",
+      "url": "/games/angry-birds-showdown.html",
+      "img": "/games/thumbs/angry-birds-showdown.webp",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Angry Birds Slingshot Frenzy",
+      "url": "/games/angry-birds-slingshot-frenzy.html",
+      "img": "/games/thumbs/angry-birds-slingshot-frenzy.webp",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Angry Birds Space",
+      "url": "/games/angry-birds-space.html",
+      "img": "/games/thumbs/angry-birds-space.webp",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
     }
   ]
 }
