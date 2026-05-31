@@ -287,6 +287,14 @@
       "genre": "Action",
       "device": "pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Minecraft Tower Defense",
+      "url": "/games/minecraft-tower-defense.html",
+      "img": "/games/thumbs/minecraft-tower-defense.jpeg",
+      "genre": "Strategy",
+      "device": "pc",
+      "added": "2026-05-31"
     }
   ]
 }
