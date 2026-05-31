@@ -255,6 +255,38 @@
       "genre": "Shooter",
       "device": "pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Block Blast",
+      "url": "/games/block-blast.html",
+      "img": "/games/thumbs/block-blast.jpeg",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Deltarune",
+      "url": "/games/deltarune.html",
+      "img": "/games/thumbs/deltarune.jpeg",
+      "genre": "RPG",
+      "device": "pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Undertale Yellow",
+      "url": "/games/undertale-yellow.html",
+      "img": "/games/thumbs/undertale-yellow.jpeg",
+      "genre": "RPG",
+      "device": "pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Madness Accelerant",
+      "url": "/games/madness-accelerant.html",
+      "img": "/games/thumbs/madness-accelerant.jpeg",
+      "genre": "Action",
+      "device": "pc",
+      "added": "2026-05-31"
     }
   ]
 }
