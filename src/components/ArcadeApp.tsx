@@ -24,6 +24,7 @@ import bitlife from "@/assets/game-bitlife.png";
 import subway from "@/assets/game-subway.webp";
 import doki from "@/assets/game-doki.webp";
 import panicBtn from "@/assets/panic-button.png";
+import homeIcon from "@/assets/home-icon.png";
 
 type Device = "mobile+pc" | "pc";
 type Game = { name: string; img: string; url: string; genre: string; device: Device; added: string };
@@ -50,12 +51,13 @@ const games: Game[] = [
   { name: "BitLife", img: bitlife, url: "/games/bitlife.html", genre: "Simulation", device: "mobile+pc", added: "2026-05-22" },
   { name: "Subway Surfers: Beijing", img: subway, url: "/games/subway-surfers-beijing.html", genre: "Arcade", device: "mobile+pc", added: "2026-05-25" },
   { name: "Doki Doki Literature Club", img: doki, url: "/games/doki-doki.html", genre: "Visual Novel", device: "mobile+pc", added: "2026-05-28" },
-  { name: "Soundboard", img: "/game-soundboard.svg", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
+  { name: "Meme Soundboard Ultimate", img: "/games/thumbs/soundboard.webp", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
 ];
 
 type SortKey = "az" | "genre" | "device" | "date" | "plays";
 const PANIC_KEY = "arcade.panicUrl";
 const PLAYS_KEY = "arcade.plays";
+const BLANK_KEY = "arcade.openInBlank";
 
 const readPlays = (): Record<string, number> => {
   if (typeof window === "undefined") return {};
@@ -75,10 +77,25 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
   });
+  const [openInBlank, setOpenInBlank] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(BLANK_KEY) === "1";
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panicUrlRef = useRef(panicUrl);
 
   useEffect(() => { panicUrlRef.current = panicUrl; window.localStorage.setItem(PANIC_KEY, panicUrl); }, [panicUrl]);
+  useEffect(() => { window.localStorage.setItem(BLANK_KEY, openInBlank ? "1" : "0"); }, [openInBlank]);
+
+  const openInNewTab = (g: Game) => {
+    if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
+    const w = window.open("about:blank", "_blank");
+    if (!w) return;
+    const src = new URL(g.url, window.location.origin).href;
+    w.document.open();
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${g.name}</title><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`);
+    w.document.close();
+  };
 
   // Lock body scroll while playing
   useEffect(() => {
@@ -261,7 +278,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             <span className="font-semibold">{playing.name}</span>
             <div className="flex gap-2">
               <button onClick={goFullscreen} className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">Fullscreen</button>
-              <a href={playing.url} target="_blank" rel="noreferrer" className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">New tab</a>
+              <button onClick={() => openInNewTab(playing)} className="rounded-md border border-zinc-700 px-3 py-1 text-xs transition hover:bg-zinc-800">New tab</button>
               <button
                 onClick={goHome}
                 className="rounded-md bg-fuchsia-600 px-3 py-1 text-xs font-semibold transition hover:bg-fuchsia-500"
@@ -284,9 +301,9 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
         onClick={goHome}
         title="Back to library"
         aria-label="Back to library"
-        className="fixed bottom-4 left-4 z-[70] flex h-12 w-12 items-center justify-center rounded-full border border-fuchsia-500/40 bg-zinc-900/90 text-xl shadow-lg shadow-fuchsia-500/30 backdrop-blur-md transition hover:scale-110 hover:border-fuchsia-400 hover:bg-zinc-800"
+        className="fixed bottom-4 left-4 z-[70] flex h-12 w-12 items-center justify-center rounded-full border border-fuchsia-500/40 bg-zinc-900/90 shadow-lg shadow-fuchsia-500/30 backdrop-blur-md transition hover:scale-110 hover:border-fuchsia-400 hover:bg-zinc-800"
       >
-        🏠
+        <img src={homeIcon} alt="" className="h-5 w-5 object-contain invert" />
       </button>
 
       {/* Panic button — raised above the Lovable badge */}
@@ -333,6 +350,21 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 </button>
               ))}
             </div>
+
+            <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-md border border-zinc-800 bg-zinc-900/60 p-3 transition hover:border-fuchsia-500/40">
+              <input
+                type="checkbox"
+                checked={openInBlank}
+                onChange={(e) => setOpenInBlank(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-fuchsia-500"
+              />
+              <span className="flex-1 text-sm">
+                <span className="block font-semibold">Stealth new tab</span>
+                <span className="text-xs text-zinc-400">Open games in an <code className="text-fuchsia-300">about:blank</code> tab with no visible URL. The game fills the whole screen.</span>
+              </span>
+            </label>
+
+
 
             <div className="mt-6 flex gap-2">
               <button onClick={() => setSettingsOpen(false)} className="flex-1 rounded-md border border-zinc-700 py-2 text-sm font-semibold transition hover:bg-zinc-800">Done</button>

@@ -231,6 +231,22 @@
       "genre": "Shooter",
       "device": "pc",
       "added": "2026-05-30"
+    },
+    {
+      "name": "Idle Dice",
+      "url": "/games/idle-dice.html",
+      "img": "/games/thumbs/idle-dice.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Soundboard",
+      "url": "/games/soundboard.html",
+      "img": "/games/thumbs/soundboard.webp",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
     }
   ]
 }
