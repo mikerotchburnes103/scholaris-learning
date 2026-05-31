@@ -351,6 +351,21 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
               ))}
             </div>
 
+            <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-md border border-zinc-800 bg-zinc-900/60 p-3 transition hover:border-fuchsia-500/40">
+              <input
+                type="checkbox"
+                checked={openInBlank}
+                onChange={(e) => setOpenInBlank(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-fuchsia-500"
+              />
+              <span className="flex-1 text-sm">
+                <span className="block font-semibold">Stealth new tab</span>
+                <span className="text-xs text-zinc-400">Open games in an <code className="text-fuchsia-300">about:blank</code> tab with no visible URL. The game fills the whole screen.</span>
+              </span>
+            </label>
+
+
+
             <div className="mt-6 flex gap-2">
               <button onClick={() => setSettingsOpen(false)} className="flex-1 rounded-md border border-zinc-700 py-2 text-sm font-semibold transition hover:bg-zinc-800">Done</button>
               <button onClick={panic} className="flex-1 rounded-md bg-red-600 py-2 text-sm font-semibold transition hover:bg-red-500">Test panic</button>
