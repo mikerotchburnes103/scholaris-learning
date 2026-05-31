@@ -5,14 +5,12 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
-// @ts-expect-error - plain JS plugin, no types
-import gamesManifestPlugin from "./scripts/build-games-manifest.mjs";
 
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
   vite: {
-    plugins: [gamesManifestPlugin()],
+    plugins: [],
   },
 });
