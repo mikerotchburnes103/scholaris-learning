@@ -383,6 +383,22 @@
       "genre": "Arcade",
       "device": "mobile+pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Bad Piggies 2018",
+      "url": "/games/bad-piggies-2018.html",
+      "img": "/games/thumbs/bad-piggies-2018.png",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-05-31"
+    },
+    {
+      "name": "Bad Piggies Latest",
+      "url": "/games/bad-piggies-latest.html",
+      "img": "/games/thumbs/bad-piggies-latest.png",
+      "genre": "Puzzle",
+      "device": "pc",
+      "added": "2026-05-31"
     }
   ]
 }
