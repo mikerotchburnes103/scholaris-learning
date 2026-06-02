@@ -245,8 +245,10 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 onChange={(e) => setSort(e.target.value as SortKey)}
                 className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-fuchsia-500/60 focus:border-fuchsia-500"
               >
+                <option value="pinned">Pinned first</option>
                 <option value="date">Date added (newest)</option>
-                <option value="plays">Most played</option>
+                <option value="plays">Most played (global)</option>
+                <option value="likes">Most liked (global)</option>
                 <option value="az">A → Z</option>
                 <option value="genre">Genre</option>
                 <option value="device">Device compatibility</option>
@@ -257,37 +259,64 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {sorted.map((g) => {
-            const count = plays[g.url] || 0;
+            const s = stats[g.url];
+            const plays = s?.plays ?? 0;
+            const likes = s?.likes ?? 0;
+            const dislikes = s?.dislikes ?? 0;
+            const myVote = votes[g.url];
+            const isPinned = pinnedSet.has(g.url);
             return (
-              <button
+              <div
                 key={g.name}
-                onClick={() => startGame(g)}
-                className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 text-left transition-all duration-200 hover:-translate-y-1 hover:border-fuchsia-500/60 hover:shadow-[0_15px_50px_-10px_rgba(217,70,239,0.55)]"
+                className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 transition-all duration-200 hover:-translate-y-1 hover:border-fuchsia-500/60 hover:shadow-[0_15px_50px_-10px_rgba(217,70,239,0.55)]"
               >
-                <div className="relative aspect-square overflow-hidden">
-                  <img src={g.img} alt={g.name} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                  <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-fuchsia-300 backdrop-blur">
-                    {g.genre}
-                  </span>
-                  <span className="absolute top-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-cyan-300 backdrop-blur">
-                    ▶ {count.toLocaleString()}
-                  </span>
-                </div>
-                <div className="p-3">
-                  <h3 className="truncate text-sm font-semibold">{g.name}</h3>
-                  <div className="mt-1 flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-zinc-400">
-                      {g.device === "mobile+pc" ? "📱 Mobile + 💻 PC" : "💻 PC only"}
+                <button onClick={() => startGame(g)} className="block w-full text-left">
+                  <div className="relative aspect-square overflow-hidden">
+                    <img src={g.img} alt={g.name} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                    <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-fuchsia-300 backdrop-blur">
+                      {g.genre}
                     </span>
-                    <span className="text-[11px] text-fuchsia-400 opacity-0 transition-opacity group-hover:opacity-100">Play →</span>
+                    <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-cyan-300 backdrop-blur">
+                      ▶ <CountUp value={plays} />
+                    </span>
+                  </div>
+                  <div className="p-3 pb-1">
+                    <h3 className="truncate text-sm font-semibold">{g.name}</h3>
+                    <div className="mt-1 text-[11px] font-medium text-zinc-400">
+                      {g.device === "mobile+pc" ? "📱 Mobile + 💻 PC" : "💻 PC only"}
+                    </div>
+                  </div>
+                </button>
+                <div className="flex items-center justify-between gap-1 px-3 pb-3 pt-1 text-[11px]">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); togglePin(g.url); }}
+                    title={isPinned ? "Unpin" : "Pin to top"}
+                    className={`rounded-md border px-1.5 py-0.5 transition ${isPinned ? "border-amber-400 bg-amber-400/20 text-amber-300" : "border-zinc-700 text-zinc-400 hover:border-amber-400 hover:text-amber-300"}`}
+                  >
+                    {isPinned ? "★" : "☆"}
+                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); vote(g.url, "like"); }}
+                      className={`flex items-center gap-1 rounded-md border px-1.5 py-0.5 transition ${myVote === "like" ? "border-emerald-400 bg-emerald-400/20 text-emerald-300" : "border-zinc-700 text-zinc-400 hover:border-emerald-400 hover:text-emerald-300"}`}
+                    >
+                      👍 <CountUp value={likes} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); vote(g.url, "dislike"); }}
+                      className={`flex items-center gap-1 rounded-md border px-1.5 py-0.5 transition ${myVote === "dislike" ? "border-rose-400 bg-rose-400/20 text-rose-300" : "border-zinc-700 text-zinc-400 hover:border-rose-400 hover:text-rose-300"}`}
+                    >
+                      👎 <CountUp value={dislikes} />
+                    </button>
                   </div>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
       </main>
+
 
       <footer className="border-t border-zinc-800 py-8 text-center text-sm text-zinc-500">
         <div>© 2026 Arcade · A Scholaris side project</div>
