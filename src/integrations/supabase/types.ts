@@ -14,13 +14,67 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      game_stats: {
+        Row: {
+          dislikes: number
+          likes: number
+          plays: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          dislikes?: number
+          likes?: number
+          plays?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          dislikes?: number
+          likes?: number
+          plays?: number
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_play: {
+        Args: { p_url: string }
+        Returns: {
+          dislikes: number
+          likes: number
+          plays: number
+          updated_at: string
+          url: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "game_stats"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      vote_game: {
+        Args: { p_delta_dislike: number; p_delta_like: number; p_url: string }
+        Returns: {
+          dislikes: number
+          likes: number
+          plays: number
+          updated_at: string
+          url: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "game_stats"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
