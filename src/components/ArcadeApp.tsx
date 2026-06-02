@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
+import { CountUp } from "@/components/CountUp";
+import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/lib/useGameStats";
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
@@ -51,7 +53,7 @@ const games: Game[] = [
   { name: "BitLife", img: bitlife, url: "/games/bitlife.html", genre: "Simulation", device: "mobile+pc", added: "2026-05-22" },
   { name: "Subway Surfers: Beijing", img: subway, url: "/games/subway-surfers-beijing.html", genre: "Arcade", device: "mobile+pc", added: "2026-05-25" },
   { name: "Doki Doki Literature Club", img: doki, url: "/games/doki-doki.html", genre: "Visual Novel", device: "mobile+pc", added: "2026-05-28" },
-  { name: "Meme Soundboard Ultimate", img: "/games/thumbs/soundboard.webp", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
+  { name: "Soundboard", img: "/games/thumbs/soundboard.webp", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
 ];
 
 type SortKey = "az" | "genre" | "device" | "date" | "plays";
