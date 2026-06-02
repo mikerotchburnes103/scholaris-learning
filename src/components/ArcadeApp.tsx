@@ -56,14 +56,19 @@ const games: Game[] = [
   { name: "Soundboard", img: "/games/thumbs/soundboard.webp", url: "/games/soundboard.html", genre: "Toy", device: "mobile+pc", added: "2026-05-30" },
 ];
 
-type SortKey = "az" | "genre" | "device" | "date" | "plays";
+type SortKey = "pinned" | "az" | "genre" | "device" | "date" | "plays" | "likes";
 const PANIC_KEY = "arcade.panicUrl";
 const PLAYS_KEY = "arcade.plays";
 const BLANK_KEY = "arcade.openInBlank";
+const PIN_KEY = "arcade.pinned";
 
 const readPlays = (): Record<string, number> => {
   if (typeof window === "undefined") return {};
   try { return JSON.parse(window.localStorage.getItem(PLAYS_KEY) || "{}"); } catch { return {}; }
+};
+const readPinned = (): string[] => {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(window.localStorage.getItem(PIN_KEY) || "[]"); } catch { return []; }
 };
 
 export function ArcadeApp({ onExit }: { onExit: () => void }) {
@@ -71,10 +76,13 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const [playing, setPlaying] = useState<Game | null>(null);
   const [panel, setPanel] = useState<FooterPanel>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("date");
+  const [sort, setSort] = useState<SortKey>("pinned");
   const [query, setQuery] = useState("");
   const [extraGames, setExtraGames] = useState<Game[]>([]);
   const [plays, setPlays] = useState<Record<string, number>>(() => readPlays());
+  const [pinned, setPinned] = useState<string[]>(() => readPinned());
+  const stats = useGameStats();
+  const [votes, setVotes] = useState<VoteState>(() => readVotes());
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
