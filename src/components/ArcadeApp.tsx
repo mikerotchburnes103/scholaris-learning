@@ -134,6 +134,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       .catch(() => {});
   }, []);
 
+  const pinnedSet = useMemo(() => new Set(pinned), [pinned]);
+
   const sorted = useMemo(() => {
     const seen = new Set<string>();
     let arr = [...games, ...extraGames].filter((g) => {
@@ -147,9 +149,25 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     else if (sort === "genre") arr.sort((a, b) => a.genre.localeCompare(b.genre) || a.name.localeCompare(b.name));
     else if (sort === "device") arr.sort((a, b) => a.device.localeCompare(b.device) || a.name.localeCompare(b.name));
     else if (sort === "date") arr.sort((a, b) => b.added.localeCompare(a.added));
-    else if (sort === "plays") arr.sort((a, b) => (plays[b.url] || 0) - (plays[a.url] || 0) || a.name.localeCompare(b.name));
+    else if (sort === "plays") arr.sort((a, b) => ((stats[b.url]?.plays || 0) - (stats[a.url]?.plays || 0)) || a.name.localeCompare(b.name));
+    else if (sort === "likes") arr.sort((a, b) => ((stats[b.url]?.likes || 0) - (stats[a.url]?.likes || 0)) || a.name.localeCompare(b.name));
+    // Always float pinned games to the top
+    arr.sort((a, b) => Number(pinnedSet.has(b.url)) - Number(pinnedSet.has(a.url)));
     return arr;
-  }, [sort, query, extraGames, plays]);
+  }, [sort, query, extraGames, stats, pinnedSet]);
+
+  const togglePin = (url: string) => {
+    setPinned((prev) => {
+      const next = prev.includes(url) ? prev.filter((u) => u !== url) : [...prev, url];
+      try { window.localStorage.setItem(PIN_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  };
+
+  const vote = async (url: string, target: "like" | "dislike") => {
+    const next = await castVote(url, target);
+    setVotes({ ...next });
+  };
 
   const startGame = (g: Game) => {
     setPlays((prev) => {
@@ -157,6 +175,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       try { window.localStorage.setItem(PLAYS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
+    bumpPlay(g.url);
     setPlaying(g);
   };
 
