@@ -5,7 +5,7 @@ export type GameStat = { url: string; plays: number; likes: number; dislikes: nu
 export type GameStatsMap = Record<string, GameStat>;
 
 const VOTE_KEY = "arcade.votes";
-type VoteState = Record<string, "like" | "dislike" | undefined>;
+export type VoteState = Record<string, "like" | "dislike" | undefined>;
 
 export const readVotes = (): VoteState => {
   if (typeof window === "undefined") return {};
