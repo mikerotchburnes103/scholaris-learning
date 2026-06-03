@@ -484,3 +484,242 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     </div>
   );
 }
+
+const ACCENT_KEYS: Theme["accent"][] = ["fuchsia", "cyan", "emerald", "amber", "rose", "violet"];
+const BG_KEYS: Theme["bg"][] = ["aurora", "midnight", "sunset", "mono"];
+
+function SettingsModal({
+  onClose, panicUrl, setPanicUrl, openInBlank, setOpenInBlank,
+  theme, setTheme, customGames, setCustomGames, panic, accent,
+}: {
+  onClose: () => void;
+  panicUrl: string; setPanicUrl: (v: string) => void;
+  openInBlank: boolean; setOpenInBlank: (v: boolean) => void;
+  theme: Theme; setTheme: (t: Theme) => void;
+  customGames: CustomGame[]; setCustomGames: (v: CustomGame[]) => void;
+  panic: () => void;
+  accent: { from: string; to: string; ring: string; text: string };
+}) {
+  const [tab, setTab] = useState<"general" | "theme" | "mine">("general");
+  // Add-game form state
+  const [name, setName] = useState("");
+  const [genre, setGenre] = useState("Custom");
+  const [device, setDevice] = useState<Device>("mobile+pc");
+  const [img, setImg] = useState("");
+  const [html, setHtml] = useState("");
+
+  const readFileAs = (file: File, as: "text" | "dataURL"): Promise<string> =>
+    new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(String(r.result));
+      r.onerror = () => rej(r.error);
+      if (as === "text") r.readAsText(file); else r.readAsDataURL(file);
+    });
+
+  const addGame = () => {
+    if (!name.trim() || !html.trim()) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    const next: CustomGame = {
+      id, name: name.trim(), genre: genre.trim() || "Custom", device,
+      img: img || "/game-soundboard.svg", html, added: today,
+    };
+    setCustomGames([next, ...customGames]);
+    setName(""); setGenre("Custom"); setDevice("mobile+pc"); setImg(""); setHtml("");
+  };
+
+  const removeGame = (id: string) => setCustomGames(customGames.filter((g) => g.id !== id));
+
+  return (
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="flex max-h-full w-full max-w-lg flex-col rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 text-zinc-100 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+          <h2 className="text-xl font-bold bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Settings</h2>
+          <button onClick={onClose} className="text-zinc-400 hover:text-white">✕</button>
+        </div>
+
+        <div className="flex border-b border-zinc-800 px-3 text-sm">
+          {(["general", "theme", "mine"] as const).map((k) => (
+            <button
+              key={k}
+              onClick={() => setTab(k)}
+              className={`px-4 py-2 transition ${tab === k ? "border-b-2 text-white" : "text-zinc-400 hover:text-zinc-200"}`}
+              style={tab === k ? { borderColor: accent.ring } : undefined}
+            >
+              {k === "general" ? "General" : k === "theme" ? "Theme" : "My Games"}
+            </button>
+          ))}
+        </div>
+
+        <div className="overflow-y-auto px-6 py-5">
+          {tab === "general" && (
+            <div className="space-y-5">
+              <div>
+                <label className="mb-2 block text-sm font-semibold">Panic redirect URL</label>
+                <input
+                  type="url" value={panicUrl} onChange={(e) => setPanicUrl(e.target.value)}
+                  placeholder="https://examrevision.ie"
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none transition focus:border-white/60"
+                />
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {["https://examrevision.ie", "https://classroom.google.com", "https://docs.google.com", "https://en.wikipedia.org"].map((u) => (
+                    <button key={u} onClick={() => setPanicUrl(u)} className="rounded-full border border-zinc-700 px-2.5 py-1 text-[11px] text-zinc-300 transition hover:border-white/60 hover:text-white">
+                      {u.replace(/^https?:\/\//, "")}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <label className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-800 bg-zinc-900/60 p-3 transition hover:border-white/40">
+                <input type="checkbox" checked={openInBlank} onChange={(e) => setOpenInBlank(e.target.checked)} className="mt-1 h-4 w-4" />
+                <span className="flex-1 text-sm">
+                  <span className="block font-semibold">Stealth new tab</span>
+                  <span className="text-xs text-zinc-400">Open games in an <code className="text-zinc-300">about:blank</code> tab with no visible URL.</span>
+                </span>
+              </label>
+
+              <button onClick={panic} className="w-full rounded-md bg-red-600 py-2 text-sm font-semibold transition hover:bg-red-500">Test panic</button>
+            </div>
+          )}
+
+          {tab === "theme" && (
+            <div className="space-y-6">
+              <div>
+                <div className="mb-2 text-sm font-semibold">Accent color</div>
+                <div className="flex flex-wrap gap-2">
+                  {ACCENT_KEYS.map((k) => {
+                    const a = ACCENTS[k];
+                    const active = theme.accent === k;
+                    return (
+                      <button
+                        key={k}
+                        onClick={() => setTheme({ ...theme, accent: k })}
+                        title={k}
+                        className={`h-9 w-9 rounded-full border-2 transition ${active ? "scale-110" : "border-zinc-700 hover:scale-105"}`}
+                        style={{ background: `linear-gradient(135deg, ${a.from}, ${a.to})`, borderColor: active ? a.ring : undefined }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Background</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {BG_KEYS.map((k) => (
+                    <button
+                      key={k}
+                      onClick={() => setTheme({ ...theme, bg: k })}
+                      className={`rounded-md border px-3 py-2 text-sm capitalize transition ${theme.bg === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}
+                    >
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Grid density</div>
+                <div className="flex gap-2">
+                  {(["comfy", "compact"] as const).map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, density: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${theme.density === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button onClick={() => setTheme(DEFAULT_THEME)} className="w-full rounded-md border border-zinc-700 py-2 text-xs text-zinc-400 transition hover:border-zinc-500 hover:text-white">
+                Reset theme
+              </button>
+            </div>
+          )}
+
+          {tab === "mine" && (
+            <div className="space-y-5">
+              <div className="rounded-md border border-zinc-800 bg-zinc-900/40 p-4">
+                <div className="mb-3 text-sm font-semibold">Add a custom game</div>
+                <p className="mb-3 text-xs text-zinc-500">Saved only on this device — nothing is uploaded. Today's date is recorded automatically.</p>
+
+                <div className="space-y-3">
+                  <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Game name" maxLength={80}
+                    className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none focus:border-white/60" />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <input value={genre} onChange={(e) => setGenre(e.target.value)} placeholder="Genre" maxLength={30}
+                      className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none focus:border-white/60" />
+                    <select value={device} onChange={(e) => setDevice(e.target.value as Device)}
+                      className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none focus:border-white/60">
+                      <option value="mobile+pc">Mobile + PC</option>
+                      <option value="pc">PC only</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs text-zinc-400">Image (URL or upload)</label>
+                    <div className="flex gap-2">
+                      <input value={img.startsWith("data:") ? "" : img} onChange={(e) => setImg(e.target.value)} placeholder="https://… (optional)"
+                        className="flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none focus:border-white/60" />
+                      <label className="cursor-pointer rounded-md border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-white/60 hover:text-white">
+                        Upload
+                        <input type="file" accept="image/*" className="hidden"
+                          onChange={async (e) => { const f = e.target.files?.[0]; if (f) setImg(await readFileAs(f, "dataURL")); }} />
+                      </label>
+                    </div>
+                    {img && <img src={img} alt="" className="mt-2 h-16 w-16 rounded object-cover" />}
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs text-zinc-400">HTML (paste or upload .html/.txt)</label>
+                    <textarea value={html} onChange={(e) => setHtml(e.target.value)} placeholder="<!doctype html>…"
+                      rows={6} className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />
+                    <label className="mt-1 inline-block cursor-pointer text-xs text-zinc-400 underline hover:text-white">
+                      Or upload a file
+                      <input type="file" accept=".html,.htm,.txt,text/html,text/plain" className="hidden"
+                        onChange={async (e) => { const f = e.target.files?.[0]; if (f) setHtml(await readFileAs(f, "text")); }} />
+                    </label>
+                  </div>
+
+                  <button onClick={addGame} disabled={!name.trim() || !html.trim()}
+                    className="w-full rounded-md py-2 text-sm font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{ background: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>
+                    Add game
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Your games ({customGames.length})</div>
+                {customGames.length === 0 ? (
+                  <p className="rounded-md border border-dashed border-zinc-800 p-4 text-center text-xs text-zinc-500">None yet. Add one above.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {customGames.map((g) => (
+                      <li key={g.id} className="flex items-center gap-3 rounded-md border border-zinc-800 bg-zinc-900/40 p-2">
+                        <img src={g.img} alt="" className="h-10 w-10 rounded object-cover" />
+                        <div className="flex-1 min-w-0">
+                          <div className="truncate text-sm font-medium">{g.name}</div>
+                          <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · added {g.added}</div>
+                        </div>
+                        <button onClick={() => removeGame(g.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-rose-400 transition hover:border-rose-500 hover:bg-rose-500/10">Delete</button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="border-t border-zinc-800 px-6 py-3">
+          <button onClick={onClose} className="w-full rounded-md border border-zinc-700 py-2 text-sm font-semibold transition hover:bg-zinc-800">Done</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
