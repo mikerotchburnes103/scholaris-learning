@@ -434,7 +434,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             </div>
           </div>
           <iframe
-            src={playing.url}
+            src={playingSrc}
             title={playing.name}
             className="h-full w-full flex-1 border-0"
             allow="autoplay; fullscreen; gamepad *; cross-origin-isolated"
