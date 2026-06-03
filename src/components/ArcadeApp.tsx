@@ -345,7 +345,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className={`grid ${theme.density === "compact" ? "grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6" : "grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"}`}>
           {sorted.map((g) => {
             const s = stats[g.url];
             const plays = s?.plays ?? 0;
