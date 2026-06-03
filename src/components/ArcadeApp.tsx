@@ -29,7 +29,8 @@ import panicBtn from "@/assets/panic-button.png";
 import homeIcon from "@/assets/home-icon.png";
 
 type Device = "mobile+pc" | "pc";
-type Game = { name: string; img: string; url: string; genre: string; device: Device; added: string };
+type Game = { name: string; img: string; url: string; genre: string; device: Device; added: string; custom?: boolean };
+type CustomGame = { name: string; img: string; html: string; genre: string; device: Device; added: string; id: string };
 
 const games: Game[] = [
   { name: "Peggle", img: peggle, url: "/games/peggle.html", genre: "Arcade", device: "mobile+pc", added: "2026-01-10" },
@@ -61,6 +62,25 @@ const PANIC_KEY = "arcade.panicUrl";
 const PLAYS_KEY = "arcade.plays";
 const BLANK_KEY = "arcade.openInBlank";
 const PIN_KEY = "arcade.pinned";
+const THEME_KEY = "arcade.theme";
+const CUSTOM_KEY = "arcade.customGames";
+
+type Theme = {
+  accent: "fuchsia" | "cyan" | "emerald" | "amber" | "rose" | "violet";
+  bg: "aurora" | "midnight" | "sunset" | "mono";
+  density: "comfy" | "compact";
+  cardStyle: "glow" | "flat" | "neon";
+};
+const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", cardStyle: "glow" };
+
+const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string; text: string }> = {
+  fuchsia: { from: "#e879f9", to: "#22d3ee", ring: "#d946ef", text: "#f0abfc" },
+  cyan:    { from: "#22d3ee", to: "#3b82f6", ring: "#06b6d4", text: "#67e8f9" },
+  emerald: { from: "#34d399", to: "#22d3ee", ring: "#10b981", text: "#6ee7b7" },
+  amber:   { from: "#fbbf24", to: "#fb7185", ring: "#f59e0b", text: "#fcd34d" },
+  rose:    { from: "#fb7185", to: "#e879f9", ring: "#f43f5e", text: "#fda4af" },
+  violet:  { from: "#a78bfa", to: "#22d3ee", ring: "#8b5cf6", text: "#c4b5fd" },
+};
 
 const readPlays = (): Record<string, number> => {
   if (typeof window === "undefined") return {};
@@ -70,6 +90,15 @@ const readPinned = (): string[] => {
   if (typeof window === "undefined") return [];
   try { return JSON.parse(window.localStorage.getItem(PIN_KEY) || "[]"); } catch { return []; }
 };
+const readTheme = (): Theme => {
+  if (typeof window === "undefined") return DEFAULT_THEME;
+  try { return { ...DEFAULT_THEME, ...JSON.parse(window.localStorage.getItem(THEME_KEY) || "{}") }; } catch { return DEFAULT_THEME; }
+};
+const readCustom = (): CustomGame[] => {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(window.localStorage.getItem(CUSTOM_KEY) || "[]"); } catch { return []; }
+};
+
 
 export function ArcadeApp({ onExit }: { onExit: () => void }) {
   useA11ySettings();
