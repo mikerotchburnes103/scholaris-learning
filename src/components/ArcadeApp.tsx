@@ -466,59 +466,21 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       </button>
 
       {settingsOpen && (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
-          onClick={() => setSettingsOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 text-zinc-100 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-1 text-2xl font-bold bg-gradient-to-r from-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">Arcade Settings</h2>
-            <p className="mb-5 text-sm text-zinc-400">Configure the panic button destination. The site will jump to this URL instantly when the small red button is pressed.</p>
-
-            <label className="mb-2 block text-sm font-semibold">Panic redirect URL</label>
-            <input
-              type="url"
-              value={panicUrl}
-              onChange={(e) => setPanicUrl(e.target.value)}
-              placeholder="https://examrevision.ie"
-              className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none transition focus:border-fuchsia-500"
-            />
-            <div className="mt-2 flex flex-wrap gap-2">
-              {["https://examrevision.ie", "https://classroom.google.com", "https://docs.google.com", "https://en.wikipedia.org"].map((u) => (
-                <button
-                  key={u}
-                  onClick={() => setPanicUrl(u)}
-                  className="rounded-full border border-zinc-700 px-2.5 py-1 text-[11px] text-zinc-300 transition hover:border-fuchsia-500/60 hover:text-white"
-                >
-                  {u.replace(/^https?:\/\//, "")}
-                </button>
-              ))}
-            </div>
-
-            <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-md border border-zinc-800 bg-zinc-900/60 p-3 transition hover:border-fuchsia-500/40">
-              <input
-                type="checkbox"
-                checked={openInBlank}
-                onChange={(e) => setOpenInBlank(e.target.checked)}
-                className="mt-1 h-4 w-4 accent-fuchsia-500"
-              />
-              <span className="flex-1 text-sm">
-                <span className="block font-semibold">Stealth new tab</span>
-                <span className="text-xs text-zinc-400">Open games in an <code className="text-fuchsia-300">about:blank</code> tab with no visible URL. The game fills the whole screen.</span>
-              </span>
-            </label>
-
-
-
-            <div className="mt-6 flex gap-2">
-              <button onClick={() => setSettingsOpen(false)} className="flex-1 rounded-md border border-zinc-700 py-2 text-sm font-semibold transition hover:bg-zinc-800">Done</button>
-              <button onClick={panic} className="flex-1 rounded-md bg-red-600 py-2 text-sm font-semibold transition hover:bg-red-500">Test panic</button>
-            </div>
-          </div>
-        </div>
+        <SettingsModal
+          onClose={() => setSettingsOpen(false)}
+          panicUrl={panicUrl}
+          setPanicUrl={setPanicUrl}
+          openInBlank={openInBlank}
+          setOpenInBlank={setOpenInBlank}
+          theme={theme}
+          setTheme={setTheme}
+          customGames={customGames}
+          setCustomGames={setCustomGames}
+          panic={panic}
+          accent={accent}
+        />
       )}
+
     </div>
   );
 }
