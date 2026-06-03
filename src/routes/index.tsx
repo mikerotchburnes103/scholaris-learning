@@ -73,11 +73,20 @@ function Index() {
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
 
+  if (arcadeOpen) {
+    return (
+      <div className="fixed inset-0 z-[100] overflow-auto bg-zinc-950">
+        <ArcadeApp onExit={() => setArcadeOpen(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
       <div className="bg-[#10183a] text-amber-50 text-xs dark:bg-[#0a1029]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
+
           <span className="hidden md:inline">Support: help@scholaris-learning.org · +1 (800) 555-0199</span>
         </div>
       </div>
