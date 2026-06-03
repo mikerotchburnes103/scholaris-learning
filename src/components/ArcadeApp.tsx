@@ -217,15 +217,33 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     setVotes({ ...next });
   };
 
+  const playingSrc = useMemo(() => {
+    if (!playing) return "";
+    if (playing.custom) {
+      const c = customGames.find((x) => `custom:${x.id}` === playing.url);
+      if (!c) return "";
+      const blob = new Blob([c.html], { type: "text/html" });
+      return URL.createObjectURL(blob);
+    }
+    return playing.url;
+  }, [playing, customGames]);
+
+  useEffect(() => {
+    if (playingSrc.startsWith("blob:")) {
+      return () => URL.revokeObjectURL(playingSrc);
+    }
+  }, [playingSrc]);
+
   const startGame = (g: Game) => {
     setPlays((prev) => {
       const next = { ...prev, [g.url]: (prev[g.url] || 0) + 1 };
       try { window.localStorage.setItem(PLAYS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
-    bumpPlay(g.url);
+    if (!g.custom) bumpPlay(g.url);
     setPlaying(g);
   };
+
 
   const goFullscreen = () => {
     const el = wrapperRef.current;
