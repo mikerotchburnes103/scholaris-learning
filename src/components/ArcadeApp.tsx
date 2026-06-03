@@ -133,6 +133,16 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
 
 
   const openInNewTab = (g: Game) => {
+    if (g.custom) {
+      const c = customGames.find((x) => `custom:${x.id}` === g.url);
+      if (!c) return;
+      const w = window.open("about:blank", "_blank");
+      if (!w) return;
+      w.document.open();
+      w.document.write(c.html);
+      w.document.close();
+      return;
+    }
     if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
     const w = window.open("about:blank", "_blank");
     if (!w) return;
@@ -141,6 +151,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${g.name}</title><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`);
     w.document.close();
   };
+
 
   // Lock body scroll while playing
   useEffect(() => {
