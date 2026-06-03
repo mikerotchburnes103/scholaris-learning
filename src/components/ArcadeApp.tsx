@@ -171,15 +171,27 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
 
   const pinnedSet = useMemo(() => new Set(pinned), [pinned]);
 
+  // Materialize custom games into Game shape (HTML stored as data URL)
+  const customAsGames = useMemo<Game[]>(() => customGames.map((c) => ({
+    name: c.name,
+    img: c.img || "/game-soundboard.svg",
+    url: `custom:${c.id}`,
+    genre: c.genre,
+    device: c.device,
+    added: c.added,
+    custom: true,
+  })), [customGames]);
+
   const sorted = useMemo(() => {
     const seen = new Set<string>();
-    let arr = [...games, ...extraGames].filter((g) => {
+    let arr = [...customAsGames, ...games, ...extraGames].filter((g) => {
       if (seen.has(g.url)) return false;
       seen.add(g.url);
       return true;
     });
     const q = query.trim().toLowerCase();
     if (q) arr = arr.filter((g) => g.name.toLowerCase().includes(q) || g.genre.toLowerCase().includes(q));
+
     if (sort === "az") arr.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === "genre") arr.sort((a, b) => a.genre.localeCompare(b.genre) || a.name.localeCompare(b.name));
     else if (sort === "device") arr.sort((a, b) => a.device.localeCompare(b.device) || a.name.localeCompare(b.name));
