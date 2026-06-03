@@ -120,11 +120,17 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     if (typeof window === "undefined") return false;
     return window.localStorage.getItem(BLANK_KEY) === "1";
   });
+  const [theme, setTheme] = useState<Theme>(() => readTheme());
+  const [customGames, setCustomGames] = useState<CustomGame[]>(() => readCustom());
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panicUrlRef = useRef(panicUrl);
+  const accent = ACCENTS[theme.accent];
 
   useEffect(() => { panicUrlRef.current = panicUrl; window.localStorage.setItem(PANIC_KEY, panicUrl); }, [panicUrl]);
   useEffect(() => { window.localStorage.setItem(BLANK_KEY, openInBlank ? "1" : "0"); }, [openInBlank]);
+  useEffect(() => { try { window.localStorage.setItem(THEME_KEY, JSON.stringify(theme)); } catch { /* ignore */ } }, [theme]);
+  useEffect(() => { try { window.localStorage.setItem(CUSTOM_KEY, JSON.stringify(customGames)); } catch { /* ignore */ } }, [customGames]);
+
 
   const openInNewTab = (g: Game) => {
     if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
