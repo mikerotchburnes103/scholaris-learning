@@ -295,7 +295,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       <header className="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-400 via-pink-300 to-cyan-300 bg-clip-text text-transparent">Arcade</span>
+            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Arcade</span>
           </div>
           <div className="flex items-center gap-2">
             <button
