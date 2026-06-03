@@ -201,7 +201,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     // Always float pinned games to the top
     arr.sort((a, b) => Number(pinnedSet.has(b.url)) - Number(pinnedSet.has(a.url)));
     return arr;
-  }, [sort, query, extraGames, stats, pinnedSet]);
+  }, [sort, query, extraGames, stats, pinnedSet, customAsGames]);
+
 
   const togglePin = (url: string) => {
     setPinned((prev) => {
