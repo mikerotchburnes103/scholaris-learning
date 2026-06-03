@@ -96,7 +96,10 @@ function Index() {
             {["Courses", "Subjects", "Teachers", "Resources", "About"].map((l) => (
               <button key={l} onClick={() => openLesson(l)} className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:scale-x-0 after:bg-[#1e2a52] after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left">{l}</button>
             ))}
+            <Link to="/practice" className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Practice</Link>
+            <Link to="/pricing" className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Pricing</Link>
           </nav>
+
           <button
             onClick={() => setOpen(true)}
             className="rounded-md bg-[#1e2a52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#162247] hover:shadow-md hover:-translate-y-0.5"
