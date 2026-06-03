@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { verifyArcadePassword } from "@/lib/arcade.functions";
 import { ArcadeApp } from "@/components/ArcadeApp";
 import logo from "@/assets/scholaris-logo.png";
+
 
 
 export const Route = createFileRoute("/")({
@@ -72,11 +73,20 @@ function Index() {
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
 
+  if (arcadeOpen) {
+    return (
+      <div className="fixed inset-0 z-[100] overflow-auto bg-zinc-950">
+        <ArcadeApp onExit={() => setArcadeOpen(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
       <div className="bg-[#10183a] text-amber-50 text-xs dark:bg-[#0a1029]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
+
           <span className="hidden md:inline">Support: help@scholaris-learning.org · +1 (800) 555-0199</span>
         </div>
       </div>
@@ -95,7 +105,10 @@ function Index() {
             {["Courses", "Subjects", "Teachers", "Resources", "About"].map((l) => (
               <button key={l} onClick={() => openLesson(l)} className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:scale-x-0 after:bg-[#1e2a52] after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left">{l}</button>
             ))}
+            <Link to="/practice" className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Practice</Link>
+            <Link to="/pricing" className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Pricing</Link>
           </nav>
+
           <button
             onClick={() => setOpen(true)}
             className="rounded-md bg-[#1e2a52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#162247] hover:shadow-md hover:-translate-y-0.5"
@@ -274,11 +287,7 @@ function Index() {
         </div>
       )}
 
-      {arcadeOpen && (
-        <div className="fixed inset-0 z-[100] overflow-auto">
-          <ArcadeApp onExit={() => setArcadeOpen(false)} />
-        </div>
-      )}
+
     </div>
   );
 }
