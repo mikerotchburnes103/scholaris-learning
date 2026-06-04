@@ -363,7 +363,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search games or genres…"
-                className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-fuchsia-500/60 focus:border-fuchsia-500 min-w-[200px]"
+                className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition min-w-[200px]`}
+                style={{ borderColor: `${accent.ring}55` }}
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-zinc-400">
@@ -371,7 +372,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-fuchsia-500/60 focus:border-fuchsia-500"
+                className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition`}
+                style={{ borderColor: `${accent.ring}55` }}
               >
                 <option value="pinned">Pinned first</option>
                 <option value="date">Date added (newest)</option>
