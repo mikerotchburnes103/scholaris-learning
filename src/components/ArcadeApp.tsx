@@ -680,6 +680,42 @@ function SettingsModal({
                 </div>
               </div>
 
+              <div>
+                <div className="mb-2 text-sm font-semibold">Corner radius</div>
+                <div className="flex gap-2">
+                  {RADIUS_KEYS.map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, radius: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${theme.radius === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Font</div>
+                <div className="flex gap-2">
+                  {FONT_KEYS.map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, font: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${FONT_CLASS[k]} ${theme.font === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Animations</div>
+                <div className="flex gap-2">
+                  {(["on", "off"] as const).map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, motion: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${theme.motion === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button onClick={() => setTheme(DEFAULT_THEME)} className="w-full rounded-md border border-zinc-700 py-2 text-xs text-zinc-400 transition hover:border-zinc-500 hover:text-white">
                 Reset theme
               </button>
