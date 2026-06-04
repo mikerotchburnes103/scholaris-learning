@@ -135,9 +135,13 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   });
   const [theme, setTheme] = useState<Theme>(() => readTheme());
   const [customGames, setCustomGames] = useState<CustomGame[]>(() => readCustom());
+  const adminGames = useAdminGames();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panicUrlRef = useRef(panicUrl);
   const accent = ACCENTS[theme.accent];
+  const cardR = RADIUS_CARD[theme.radius];
+  const ctlR = RADIUS_CTL[theme.radius];
+  const transition = theme.motion === "on" ? "transition-all duration-200" : "";
 
   useEffect(() => { panicUrlRef.current = panicUrl; window.localStorage.setItem(PANIC_KEY, panicUrl); }, [panicUrl]);
   useEffect(() => { window.localStorage.setItem(BLANK_KEY, openInBlank ? "1" : "0"); }, [openInBlank]);
