@@ -786,7 +786,7 @@ function SettingsModal({
                         <img src={g.img} alt="" className="h-10 w-10 rounded object-cover" />
                         <div className="flex-1 min-w-0">
                           <div className="truncate text-sm font-medium">{g.name}</div>
-                          <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · added {g.added}</div>
+                          <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · added {new Date(g.added).toLocaleString()}</div>
                         </div>
                         <button onClick={() => removeGame(g.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-rose-400 transition hover:border-rose-500 hover:bg-rose-500/10">Delete</button>
                       </li>
