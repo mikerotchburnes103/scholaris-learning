@@ -397,8 +397,11 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             const isPinned = pinnedSet.has(g.url);
             return (
               <div
-                key={g.name}
-                className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 transition-all duration-200 hover:-translate-y-1 hover:border-fuchsia-500/60 hover:shadow-[0_15px_50px_-10px_rgba(217,70,239,0.55)]"
+                key={g.url}
+                className={`group relative overflow-hidden ${cardR} border bg-gradient-to-br from-zinc-900 to-zinc-950 ${transition} hover:-translate-y-1`}
+                style={{ borderColor: `${accent.ring}40`, boxShadow: theme.motion === "on" ? `0 0 0 1px ${accent.ring}22` : undefined }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 15px 50px -10px ${accent.ring}88`; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = theme.motion === "on" ? `0 0 0 1px ${accent.ring}22` : ""; }}
               >
                 <button onClick={() => startGame(g)} className="block w-full text-left">
                   <div className="relative aspect-square overflow-hidden">
