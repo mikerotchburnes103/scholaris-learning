@@ -5,6 +5,6 @@ export const ARCADE_COOKIE_NAME = "arcade_auth";
 export const ARCADE_COOKIE_TOKEN = "v1.7Qf3kP9LmZ2xR4tN8wYbHdCsVgJqW6uA";
 
 // Admin (you-only) — completely separate from arcade access.
-export const ADMIN_PASSWORDS = ["scholaris-admin-2026"];
+export const ADMIN_PASSWORDS = ["green_apples"];
 export const ADMIN_COOKIE_NAME = "arcade_admin";
 export const ADMIN_COOKIE_TOKEN = "v1.Adm9XqL2nP7tR4kZ8wYbHdCsVgJqW6uM3F";
