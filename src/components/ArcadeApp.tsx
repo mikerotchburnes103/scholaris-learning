@@ -308,23 +308,27 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     window.location.replace(panicUrlRef.current || "https://examrevision.ie");
   };
 
+  const bgClass =
+    theme.bg === "mono" ? "bg-zinc-950" :
+    theme.bg === "midnight" ? "bg-gradient-to-br from-slate-950 via-slate-900 to-black" :
+    theme.bg === "sunset" ? "bg-gradient-to-br from-zinc-950 via-rose-950 to-black" :
+    theme.bg === "matrix" ? "bg-[radial-gradient(ellipse_at_top,#022c22,#000_70%)]" :
+    theme.bg === "candy" ? "bg-gradient-to-br from-pink-950 via-fuchsia-950 to-indigo-950" :
+    "bg-gradient-to-br from-zinc-950 via-zinc-900 to-black";
+
   return (
     <div
-      className={`relative min-h-screen overflow-hidden text-zinc-100 ${
-        theme.bg === "mono" ? "bg-zinc-950" :
-        theme.bg === "midnight" ? "bg-gradient-to-br from-slate-950 via-slate-900 to-black" :
-        theme.bg === "sunset" ? "bg-gradient-to-br from-zinc-950 via-rose-950 to-black" :
-        "bg-gradient-to-br from-zinc-950 via-zinc-900 to-black"
-      }`}
+      className={`relative min-h-screen overflow-hidden text-zinc-100 ${FONT_CLASS[theme.font]} ${bgClass}`}
       style={{ ["--accent-from" as any]: accent.from, ["--accent-to" as any]: accent.to, ["--accent-ring" as any]: accent.ring }}
     >
       {theme.bg !== "mono" && (
         <div className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.from }} />
-          <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.to }} />
-          <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
+          <div className={`absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl opacity-30 ${theme.motion === "on" ? "animate-pulse" : ""}`} style={{ background: accent.from }} />
+          <div className={`absolute top-1/3 -right-32 h-96 w-96 rounded-full blur-3xl opacity-30 ${theme.motion === "on" ? "animate-pulse" : ""}`} style={{ background: accent.to, animationDelay: "1.5s" }} />
+          <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.ring }} />
         </div>
       )}
+
 
 
       <header className="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl">
