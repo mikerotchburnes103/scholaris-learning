@@ -565,7 +565,7 @@ function SettingsModal({
 
   const addGame = () => {
     if (!name.trim() || !html.trim()) return;
-    const today = new Date().toISOString().slice(0, 10);
+    const now = new Date().toISOString(); // full ISO timestamp, second precision
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const next: CustomGame = {
       id, name: name.trim(), genre: genre.trim() || "Custom", device,
