@@ -265,13 +265,14 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const playingSrc = useMemo(() => {
     if (!playing) return "";
     if (playing.custom) {
-      const c = customGames.find((x) => `custom:${x.id}` === playing.url);
-      if (!c) return "";
-      const blob = new Blob([c.html], { type: "text/html" });
+      const html = findCustomHtml(playing.url);
+      if (!html) return "";
+      const blob = new Blob([html], { type: "text/html" });
       return URL.createObjectURL(blob);
     }
     return playing.url;
-  }, [playing, customGames]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, customGames, adminGames]);
 
   useEffect(() => {
     if (playingSrc.startsWith("blob:")) {
