@@ -67,12 +67,14 @@ const THEME_KEY = "arcade.theme";
 const CUSTOM_KEY = "arcade.customGames";
 
 type Theme = {
-  accent: "fuchsia" | "cyan" | "emerald" | "amber" | "rose" | "violet";
-  bg: "aurora" | "midnight" | "sunset" | "mono";
+  accent: "fuchsia" | "cyan" | "emerald" | "amber" | "rose" | "violet" | "lime" | "sky";
+  bg: "aurora" | "midnight" | "sunset" | "mono" | "matrix" | "candy";
   density: "comfy" | "compact";
-  cardStyle: "glow" | "flat" | "neon";
+  radius: "sharp" | "soft" | "round";
+  font: "system" | "mono" | "serif";
+  motion: "on" | "off";
 };
-const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", cardStyle: "glow" };
+const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", radius: "soft", font: "system", motion: "on" };
 
 const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string; text: string }> = {
   fuchsia: { from: "#e879f9", to: "#22d3ee", ring: "#d946ef", text: "#f0abfc" },
@@ -81,6 +83,16 @@ const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string;
   amber:   { from: "#fbbf24", to: "#fb7185", ring: "#f59e0b", text: "#fcd34d" },
   rose:    { from: "#fb7185", to: "#e879f9", ring: "#f43f5e", text: "#fda4af" },
   violet:  { from: "#a78bfa", to: "#22d3ee", ring: "#8b5cf6", text: "#c4b5fd" },
+  lime:    { from: "#bef264", to: "#22d3ee", ring: "#a3e635", text: "#d9f99d" },
+  sky:     { from: "#7dd3fc", to: "#a78bfa", ring: "#0ea5e9", text: "#bae6fd" },
+};
+
+const RADIUS_CARD: Record<Theme["radius"], string> = { sharp: "rounded-none", soft: "rounded-2xl", round: "rounded-[28px]" };
+const RADIUS_CTL: Record<Theme["radius"], string> = { sharp: "rounded-none", soft: "rounded-md", round: "rounded-full" };
+const FONT_CLASS: Record<Theme["font"], string> = {
+  system: "font-sans",
+  mono: "font-mono",
+  serif: "[font-family:Georgia,'Times_New_Roman',serif]",
 };
 
 const readPlays = (): Record<string, number> => {
