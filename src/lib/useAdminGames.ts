@@ -24,8 +24,7 @@ export function useAdminGames() {
       if (!cancelled && data) setRows(data as AdminGame[]);
     })();
     const ch = supabase.channel("admin_games_live").on(
-      // @ts-expect-error realtime types
-      "postgres_changes",
+      "postgres_changes" as any,
       { event: "*", schema: "public", table: "admin_games" },
       () => {
         (supabase as any).from("admin_games").select("id,name,img,html,genre,device,added_at").order("added_at", { ascending: false }).then(({ data }: any) => {
