@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_games: {
+        Row: {
+          added_at: string
+          device: string
+          genre: string
+          html: string
+          id: string
+          img: string
+          name: string
+        }
+        Insert: {
+          added_at?: string
+          device?: string
+          genre?: string
+          html: string
+          id?: string
+          img?: string
+          name: string
+        }
+        Update: {
+          added_at?: string
+          device?: string
+          genre?: string
+          html?: string
+          id?: string
+          img?: string
+          name?: string
+        }
+        Relationships: []
+      }
       game_stats: {
         Row: {
           dislikes: number

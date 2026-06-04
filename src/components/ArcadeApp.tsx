@@ -3,6 +3,7 @@ import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { CountUp } from "@/components/CountUp";
 import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/lib/useGameStats";
+import { useAdminGames } from "@/lib/useAdminGames";
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
@@ -66,12 +67,14 @@ const THEME_KEY = "arcade.theme";
 const CUSTOM_KEY = "arcade.customGames";
 
 type Theme = {
-  accent: "fuchsia" | "cyan" | "emerald" | "amber" | "rose" | "violet";
-  bg: "aurora" | "midnight" | "sunset" | "mono";
+  accent: "fuchsia" | "cyan" | "emerald" | "amber" | "rose" | "violet" | "lime" | "sky";
+  bg: "aurora" | "midnight" | "sunset" | "mono" | "matrix" | "candy";
   density: "comfy" | "compact";
-  cardStyle: "glow" | "flat" | "neon";
+  radius: "sharp" | "soft" | "round";
+  font: "system" | "mono" | "serif";
+  motion: "on" | "off";
 };
-const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", cardStyle: "glow" };
+const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", radius: "soft", font: "system", motion: "on" };
 
 const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string; text: string }> = {
   fuchsia: { from: "#e879f9", to: "#22d3ee", ring: "#d946ef", text: "#f0abfc" },
@@ -80,6 +83,16 @@ const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string;
   amber:   { from: "#fbbf24", to: "#fb7185", ring: "#f59e0b", text: "#fcd34d" },
   rose:    { from: "#fb7185", to: "#e879f9", ring: "#f43f5e", text: "#fda4af" },
   violet:  { from: "#a78bfa", to: "#22d3ee", ring: "#8b5cf6", text: "#c4b5fd" },
+  lime:    { from: "#bef264", to: "#22d3ee", ring: "#a3e635", text: "#d9f99d" },
+  sky:     { from: "#7dd3fc", to: "#a78bfa", ring: "#0ea5e9", text: "#bae6fd" },
+};
+
+const RADIUS_CARD: Record<Theme["radius"], string> = { sharp: "rounded-none", soft: "rounded-2xl", round: "rounded-[28px]" };
+const RADIUS_CTL: Record<Theme["radius"], string> = { sharp: "rounded-none", soft: "rounded-md", round: "rounded-full" };
+const FONT_CLASS: Record<Theme["font"], string> = {
+  system: "font-sans",
+  mono: "font-mono",
+  serif: "[font-family:Georgia,'Times_New_Roman',serif]",
 };
 
 const readPlays = (): Record<string, number> => {
@@ -122,9 +135,13 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   });
   const [theme, setTheme] = useState<Theme>(() => readTheme());
   const [customGames, setCustomGames] = useState<CustomGame[]>(() => readCustom());
+  const adminGames = useAdminGames();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panicUrlRef = useRef(panicUrl);
   const accent = ACCENTS[theme.accent];
+  const cardR = RADIUS_CARD[theme.radius];
+  const ctlR = RADIUS_CTL[theme.radius];
+  const transition = theme.motion === "on" ? "transition-all duration-200" : "";
 
   useEffect(() => { panicUrlRef.current = panicUrl; window.localStorage.setItem(PANIC_KEY, panicUrl); }, [panicUrl]);
   useEffect(() => { window.localStorage.setItem(BLANK_KEY, openInBlank ? "1" : "0"); }, [openInBlank]);
@@ -132,14 +149,20 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   useEffect(() => { try { window.localStorage.setItem(CUSTOM_KEY, JSON.stringify(customGames)); } catch { /* ignore */ } }, [customGames]);
 
 
+  const findCustomHtml = (url: string): string | null => {
+    if (url.startsWith("custom:")) return customGames.find((x) => `custom:${x.id}` === url)?.html ?? null;
+    if (url.startsWith("admin:")) return adminGames.find((x) => `admin:${x.id}` === url)?.html ?? null;
+    return null;
+  };
+
   const openInNewTab = (g: Game) => {
     if (g.custom) {
-      const c = customGames.find((x) => `custom:${x.id}` === g.url);
-      if (!c) return;
+      const html = findCustomHtml(g.url);
+      if (!html) return;
       const w = window.open("about:blank", "_blank");
       if (!w) return;
       w.document.open();
-      w.document.write(c.html);
+      w.document.write(html);
       w.document.close();
       return;
     }
@@ -193,9 +216,20 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     custom: true,
   })), [customGames]);
 
+  // Admin-pushed games. URL scheme `admin:<id>` triggers blob iframe like custom games.
+  const adminAsGames = useMemo<Game[]>(() => adminGames.map((g) => ({
+    name: g.name,
+    img: g.img || "/game-soundboard.svg",
+    url: `admin:${g.id}`,
+    genre: g.genre,
+    device: g.device,
+    added: g.added_at,
+    custom: true,
+  })), [adminGames]);
+
   const sorted = useMemo(() => {
     const seen = new Set<string>();
-    let arr = [...customAsGames, ...games, ...extraGames].filter((g) => {
+    let arr = [...customAsGames, ...adminAsGames, ...games, ...extraGames].filter((g) => {
       if (seen.has(g.url)) return false;
       seen.add(g.url);
       return true;
@@ -212,7 +246,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     // Always float pinned games to the top
     arr.sort((a, b) => Number(pinnedSet.has(b.url)) - Number(pinnedSet.has(a.url)));
     return arr;
-  }, [sort, query, extraGames, stats, pinnedSet, customAsGames]);
+  }, [sort, query, extraGames, stats, pinnedSet, customAsGames, adminAsGames]);
 
 
   const togglePin = (url: string) => {
@@ -231,13 +265,14 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const playingSrc = useMemo(() => {
     if (!playing) return "";
     if (playing.custom) {
-      const c = customGames.find((x) => `custom:${x.id}` === playing.url);
-      if (!c) return "";
-      const blob = new Blob([c.html], { type: "text/html" });
+      const html = findCustomHtml(playing.url);
+      if (!html) return "";
+      const blob = new Blob([html], { type: "text/html" });
       return URL.createObjectURL(blob);
     }
     return playing.url;
-  }, [playing, customGames]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, customGames, adminGames]);
 
   useEffect(() => {
     if (playingSrc.startsWith("blob:")) {
@@ -273,23 +308,27 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     window.location.replace(panicUrlRef.current || "https://examrevision.ie");
   };
 
+  const bgClass =
+    theme.bg === "mono" ? "bg-zinc-950" :
+    theme.bg === "midnight" ? "bg-gradient-to-br from-slate-950 via-slate-900 to-black" :
+    theme.bg === "sunset" ? "bg-gradient-to-br from-zinc-950 via-rose-950 to-black" :
+    theme.bg === "matrix" ? "bg-[radial-gradient(ellipse_at_top,#022c22,#000_70%)]" :
+    theme.bg === "candy" ? "bg-gradient-to-br from-pink-950 via-fuchsia-950 to-indigo-950" :
+    "bg-gradient-to-br from-zinc-950 via-zinc-900 to-black";
+
   return (
     <div
-      className={`relative min-h-screen overflow-hidden text-zinc-100 ${
-        theme.bg === "mono" ? "bg-zinc-950" :
-        theme.bg === "midnight" ? "bg-gradient-to-br from-slate-950 via-slate-900 to-black" :
-        theme.bg === "sunset" ? "bg-gradient-to-br from-zinc-950 via-rose-950 to-black" :
-        "bg-gradient-to-br from-zinc-950 via-zinc-900 to-black"
-      }`}
+      className={`relative min-h-screen overflow-hidden text-zinc-100 ${FONT_CLASS[theme.font]} ${bgClass}`}
       style={{ ["--accent-from" as any]: accent.from, ["--accent-to" as any]: accent.to, ["--accent-ring" as any]: accent.ring }}
     >
       {theme.bg !== "mono" && (
         <div className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.from }} />
-          <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.to }} />
-          <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
+          <div className={`absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl opacity-30 ${theme.motion === "on" ? "animate-pulse" : ""}`} style={{ background: accent.from }} />
+          <div className={`absolute top-1/3 -right-32 h-96 w-96 rounded-full blur-3xl opacity-30 ${theme.motion === "on" ? "animate-pulse" : ""}`} style={{ background: accent.to, animationDelay: "1.5s" }} />
+          <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full blur-3xl opacity-20" style={{ background: accent.ring }} />
         </div>
       )}
+
 
 
       <header className="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl">
@@ -300,7 +339,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSettingsOpen(true)}
-              className="rounded-full border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-fuchsia-500/60 hover:text-white"
+              className={`${ctlR} border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 ${transition} hover:scale-105`}
+              style={{ borderColor: accent.ring + "55", color: accent.text }}
             >
               ⚙ Settings
             </button>
@@ -323,7 +363,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search games or genres…"
-                className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-fuchsia-500/60 focus:border-fuchsia-500 min-w-[200px]"
+                className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition min-w-[200px]`}
+                style={{ borderColor: `${accent.ring}55` }}
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-zinc-400">
@@ -331,7 +372,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-fuchsia-500/60 focus:border-fuchsia-500"
+                className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none transition`}
+                style={{ borderColor: `${accent.ring}55` }}
               >
                 <option value="pinned">Pinned first</option>
                 <option value="date">Date added (newest)</option>
@@ -355,8 +397,11 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             const isPinned = pinnedSet.has(g.url);
             return (
               <div
-                key={g.name}
-                className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 transition-all duration-200 hover:-translate-y-1 hover:border-fuchsia-500/60 hover:shadow-[0_15px_50px_-10px_rgba(217,70,239,0.55)]"
+                key={g.url}
+                className={`group relative overflow-hidden ${cardR} border bg-gradient-to-br from-zinc-900 to-zinc-950 ${transition} hover:-translate-y-1`}
+                style={{ borderColor: `${accent.ring}40`, boxShadow: theme.motion === "on" ? `0 0 0 1px ${accent.ring}22` : undefined }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 15px 50px -10px ${accent.ring}88`; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = theme.motion === "on" ? `0 0 0 1px ${accent.ring}22` : ""; }}
               >
                 <button onClick={() => startGame(g)} className="block w-full text-left">
                   <div className="relative aspect-square overflow-hidden">
@@ -485,8 +530,10 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   );
 }
 
-const ACCENT_KEYS: Theme["accent"][] = ["fuchsia", "cyan", "emerald", "amber", "rose", "violet"];
-const BG_KEYS: Theme["bg"][] = ["aurora", "midnight", "sunset", "mono"];
+const ACCENT_KEYS: Theme["accent"][] = ["fuchsia", "cyan", "emerald", "amber", "rose", "violet", "lime", "sky"];
+const BG_KEYS: Theme["bg"][] = ["aurora", "midnight", "sunset", "mono", "matrix", "candy"];
+const RADIUS_KEYS: Theme["radius"][] = ["sharp", "soft", "round"];
+const FONT_KEYS: Theme["font"][] = ["system", "mono", "serif"];
 
 function SettingsModal({
   onClose, panicUrl, setPanicUrl, openInBlank, setOpenInBlank,
@@ -518,11 +565,11 @@ function SettingsModal({
 
   const addGame = () => {
     if (!name.trim() || !html.trim()) return;
-    const today = new Date().toISOString().slice(0, 10);
+    const now = new Date().toISOString(); // full ISO timestamp, second precision
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const next: CustomGame = {
       id, name: name.trim(), genre: genre.trim() || "Custom", device,
-      img: img || "/game-soundboard.svg", html, added: today,
+      img: img || "/game-soundboard.svg", html, added: now,
     };
     setCustomGames([next, ...customGames]);
     setName(""); setGenre("Custom"); setDevice("mobile+pc"); setImg(""); setHtml("");
@@ -633,6 +680,42 @@ function SettingsModal({
                 </div>
               </div>
 
+              <div>
+                <div className="mb-2 text-sm font-semibold">Corner radius</div>
+                <div className="flex gap-2">
+                  {RADIUS_KEYS.map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, radius: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${theme.radius === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Font</div>
+                <div className="flex gap-2">
+                  {FONT_KEYS.map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, font: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${FONT_CLASS[k]} ${theme.font === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-semibold">Animations</div>
+                <div className="flex gap-2">
+                  {(["on", "off"] as const).map((k) => (
+                    <button key={k} onClick={() => setTheme({ ...theme, motion: k })}
+                      className={`flex-1 rounded-md border px-3 py-2 text-sm capitalize transition ${theme.motion === k ? "border-white text-white" : "border-zinc-700 text-zinc-400 hover:border-zinc-500"}`}>
+                      {k}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button onClick={() => setTheme(DEFAULT_THEME)} className="w-full rounded-md border border-zinc-700 py-2 text-xs text-zinc-400 transition hover:border-zinc-500 hover:text-white">
                 Reset theme
               </button>
@@ -703,7 +786,7 @@ function SettingsModal({
                         <img src={g.img} alt="" className="h-10 w-10 rounded object-cover" />
                         <div className="flex-1 min-w-0">
                           <div className="truncate text-sm font-medium">{g.name}</div>
-                          <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · added {g.added}</div>
+                          <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · added {new Date(g.added).toLocaleString()}</div>
                         </div>
                         <button onClick={() => removeGame(g.id)} className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-rose-400 transition hover:border-rose-500 hover:bg-rose-500/10">Delete</button>
                       </li>
