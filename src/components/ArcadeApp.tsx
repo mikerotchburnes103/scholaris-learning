@@ -149,14 +149,20 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   useEffect(() => { try { window.localStorage.setItem(CUSTOM_KEY, JSON.stringify(customGames)); } catch { /* ignore */ } }, [customGames]);
 
 
+  const findCustomHtml = (url: string): string | null => {
+    if (url.startsWith("custom:")) return customGames.find((x) => `custom:${x.id}` === url)?.html ?? null;
+    if (url.startsWith("admin:")) return adminGames.find((x) => `admin:${x.id}` === url)?.html ?? null;
+    return null;
+  };
+
   const openInNewTab = (g: Game) => {
     if (g.custom) {
-      const c = customGames.find((x) => `custom:${x.id}` === g.url);
-      if (!c) return;
+      const html = findCustomHtml(g.url);
+      if (!html) return;
       const w = window.open("about:blank", "_blank");
       if (!w) return;
       w.document.open();
-      w.document.write(c.html);
+      w.document.write(html);
       w.document.close();
       return;
     }
