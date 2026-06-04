@@ -530,8 +530,10 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   );
 }
 
-const ACCENT_KEYS: Theme["accent"][] = ["fuchsia", "cyan", "emerald", "amber", "rose", "violet"];
-const BG_KEYS: Theme["bg"][] = ["aurora", "midnight", "sunset", "mono"];
+const ACCENT_KEYS: Theme["accent"][] = ["fuchsia", "cyan", "emerald", "amber", "rose", "violet", "lime", "sky"];
+const BG_KEYS: Theme["bg"][] = ["aurora", "midnight", "sunset", "mono", "matrix", "candy"];
+const RADIUS_KEYS: Theme["radius"][] = ["sharp", "soft", "round"];
+const FONT_KEYS: Theme["font"][] = ["system", "mono", "serif"];
 
 function SettingsModal({
   onClose, panicUrl, setPanicUrl, openInBlank, setOpenInBlank,
