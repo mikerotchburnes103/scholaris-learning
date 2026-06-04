@@ -339,7 +339,8 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSettingsOpen(true)}
-              className="rounded-full border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-fuchsia-500/60 hover:text-white"
+              className={`${ctlR} border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 ${transition} hover:scale-105`}
+              style={{ borderColor: accent.ring + "55", color: accent.text }}
             >
               ⚙ Settings
             </button>
