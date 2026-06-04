@@ -210,9 +210,20 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     custom: true,
   })), [customGames]);
 
+  // Admin-pushed games. URL scheme `admin:<id>` triggers blob iframe like custom games.
+  const adminAsGames = useMemo<Game[]>(() => adminGames.map((g) => ({
+    name: g.name,
+    img: g.img || "/game-soundboard.svg",
+    url: `admin:${g.id}`,
+    genre: g.genre,
+    device: g.device,
+    added: g.added_at,
+    custom: true,
+  })), [adminGames]);
+
   const sorted = useMemo(() => {
     const seen = new Set<string>();
-    let arr = [...customAsGames, ...games, ...extraGames].filter((g) => {
+    let arr = [...customAsGames, ...adminAsGames, ...games, ...extraGames].filter((g) => {
       if (seen.has(g.url)) return false;
       seen.add(g.url);
       return true;
@@ -229,7 +240,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     // Always float pinned games to the top
     arr.sort((a, b) => Number(pinnedSet.has(b.url)) - Number(pinnedSet.has(a.url)));
     return arr;
-  }, [sort, query, extraGames, stats, pinnedSet, customAsGames]);
+  }, [sort, query, extraGames, stats, pinnedSet, customAsGames, adminAsGames]);
 
 
   const togglePin = (url: string) => {
