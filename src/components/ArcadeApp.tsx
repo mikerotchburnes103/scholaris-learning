@@ -569,7 +569,7 @@ function SettingsModal({
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const next: CustomGame = {
       id, name: name.trim(), genre: genre.trim() || "Custom", device,
-      img: img || "/game-soundboard.svg", html, added: today,
+      img: img || "/game-soundboard.svg", html, added: now,
     };
     setCustomGames([next, ...customGames]);
     setName(""); setGenre("Custom"); setDevice("mobile+pc"); setImg(""); setHtml("");
