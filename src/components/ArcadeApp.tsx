@@ -3,6 +3,7 @@ import { useA11ySettings } from "@/lib/a11y";
 import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { CountUp } from "@/components/CountUp";
 import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/lib/useGameStats";
+import { useAdminGames } from "@/lib/useAdminGames";
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
