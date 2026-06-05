@@ -142,3 +142,18 @@
     color: var(--color-foreground);
   }
 }
+
+/* Arcade splash text — Minecraft-style wobble */
+@keyframes arcade-splash-bounce {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50%      { transform: rotate(-8deg) scale(1.12); }
+}
+.arcade-splash {
+  animation: arcade-splash-bounce 1s ease-in-out infinite;
+  transform-origin: left center;
+  cursor: pointer;
+  user-select: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade-splash { animation: none; transform: rotate(-6deg); }
+}
