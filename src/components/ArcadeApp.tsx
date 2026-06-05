@@ -74,7 +74,7 @@ type Theme = {
   font: "system" | "mono" | "serif";
   motion: "on" | "off";
 };
-const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "comfy", radius: "soft", font: "system", motion: "on" };
+const DEFAULT_THEME: Theme = { accent: "fuchsia", bg: "aurora", density: "compact", radius: "soft", font: "system", motion: "on" };
 
 const ACCENTS: Record<Theme["accent"], { from: string; to: string; ring: string; text: string }> = {
   fuchsia: { from: "#e879f9", to: "#22d3ee", ring: "#d946ef", text: "#f0abfc" },
