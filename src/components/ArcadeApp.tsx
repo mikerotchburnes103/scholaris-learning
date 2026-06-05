@@ -4,6 +4,7 @@ import { FooterModal, type FooterPanel } from "@/components/FooterModal";
 import { CountUp } from "@/components/CountUp";
 import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/lib/useGameStats";
 import { useAdminGames } from "@/lib/useAdminGames";
+import { SPLASH_TEXTS } from "@/lib/splashTexts";
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
