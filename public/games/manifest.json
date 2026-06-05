@@ -399,6 +399,62 @@
       "genre": "Puzzle",
       "device": "pc",
       "added": "2026-05-31"
+    },
+    {
+      "name": "Riddle School",
+      "url": "/games/riddle-school.html",
+      "img": "/games/thumbs/riddle-school.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle School 2",
+      "url": "/games/riddle-school-2.html",
+      "img": "/games/thumbs/riddle-school-2.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle School 3",
+      "url": "/games/riddle-school-3.html",
+      "img": "/games/thumbs/riddle-school-3.jpeg",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle School 4",
+      "url": "/games/riddle-school-4.html",
+      "img": "/games/thumbs/riddle-school-4.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle School 5",
+      "url": "/games/riddle-school-5.html",
+      "img": "/games/thumbs/riddle-school-5.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle Transfer",
+      "url": "/games/riddle-transfer.html",
+      "img": "/games/thumbs/riddle-transfer.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
+    },
+    {
+      "name": "Riddle Transfer 2",
+      "url": "/games/riddle-transfer-2.html",
+      "img": "/games/thumbs/riddle-transfer-2.webp",
+      "genre": "Puzzle",
+      "device": "mobile+pc",
+      "added": "2026-06-05"
     }
   ]
 }
