@@ -5,6 +5,7 @@ import { CountUp } from "@/components/CountUp";
 import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/lib/useGameStats";
 import { useAdminGames } from "@/lib/useAdminGames";
 import { SPLASH_TEXTS } from "@/lib/splashTexts";
+import { randomMeme } from "@/lib/memes";
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
@@ -127,6 +128,20 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const stats = useGameStats();
   const [votes, setVotes] = useState<VoteState>(() => readVotes());
   const [splash, setSplash] = useState(() => SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)]);
+  const [splashImg, setSplashImg] = useState(() => randomMeme());
+  const [patchOpen, setPatchOpen] = useState(false);
+  const [patchMd, setPatchMd] = useState<string>("");
+  useEffect(() => {
+    if (!patchOpen || patchMd) return;
+    fetch("/patchnotes.md", { cache: "no-cache" })
+      .then((r) => (r.ok ? r.text() : "# Patch Notes\n\nNothing here yet."))
+      .then(setPatchMd)
+      .catch(() => setPatchMd("# Patch Notes\n\nFailed to load."));
+  }, [patchOpen, patchMd]);
+  const rollSplash = () => {
+    setSplash(SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)]);
+    setSplashImg(randomMeme());
+  };
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
@@ -340,6 +355,13 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setPatchOpen(true)}
+              className={`${ctlR} border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 ${transition} hover:scale-105`}
+              style={{ borderColor: accent.ring + "55", color: accent.text }}
+            >
+              📝 Patch Notes
+            </button>
+            <button
               onClick={() => setSettingsOpen(true)}
               className={`${ctlR} border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-xs text-zinc-300 ${transition} hover:scale-105`}
               style={{ borderColor: accent.ring + "55", color: accent.text }}
@@ -354,16 +376,28 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <button
-              type="button"
-              onClick={() => setSplash(SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)])}
-              title="Click for another"
-              className="arcade-splash mb-1 inline-block origin-bottom-left text-sm font-extrabold uppercase tracking-wide text-yellow-300 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] hover:text-yellow-200"
-              style={{ textShadow: "0 0 6px rgba(250,204,21,0.55), 0 2px 0 rgba(0,0,0,0.4)" }}
-            >
-              {splash}
-            </button>
-            <h1 className="mb-2 text-5xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
+            <div className="mb-2 flex flex-wrap items-center gap-4">
+              <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
+              <button
+                type="button"
+                onClick={rollSplash}
+                title="Click for another"
+                className="group flex items-center gap-2 text-left"
+              >
+                <img
+                  src={splashImg}
+                  alt=""
+                  className="h-12 w-12 rounded-md object-cover ring-2 ring-yellow-400/60 shadow-[0_0_12px_rgba(250,204,21,0.45)] transition group-hover:scale-110"
+                  loading="lazy"
+                />
+                <span
+                  className="arcade-splash inline-block origin-bottom-left text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.7)] group-hover:text-yellow-200"
+                  style={{ textShadow: "0 0 10px rgba(250,204,21,0.65), 0 2px 0 rgba(0,0,0,0.5)" }}
+                >
+                  {splash}
+                </span>
+              </button>
+            </div>
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
@@ -535,6 +569,31 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
           panic={panic}
           accent={accent}
         />
+      )}
+
+      {patchOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setPatchOpen(false)}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`max-h-[85vh] w-full max-w-2xl overflow-hidden ${cardR} border border-zinc-800 bg-zinc-950 shadow-2xl`}
+            style={{ borderColor: accent.ring + "66" }}
+          >
+            <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3">
+              <h2 className="text-lg font-bold bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
+              <button onClick={() => setPatchOpen(false)} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
+            </div>
+            <div className="max-h-[70vh] overflow-y-auto px-6 py-5 text-sm leading-relaxed text-zinc-200">
+              {patchMd ? (
+                <pre className="whitespace-pre-wrap break-words font-sans">{patchMd}</pre>
+              ) : (
+                <p className="text-zinc-500">Loading…</p>
+              )}
+            </div>
+            <div className="border-t border-zinc-800 px-5 py-2 text-[11px] text-zinc-500">
+              Edit <code className="rounded bg-zinc-900 px-1.5 py-0.5">public/patchnotes.md</code> on GitHub to update.
+            </div>
+          </div>
+        </div>
       )}
 
     </div>
