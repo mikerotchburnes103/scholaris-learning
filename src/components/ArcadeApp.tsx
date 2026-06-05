@@ -126,6 +126,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const [pinned, setPinned] = useState<string[]>(() => readPinned());
   const stats = useGameStats();
   const [votes, setVotes] = useState<VoteState>(() => readVotes());
+  const [splash, setSplash] = useState(() => SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)]);
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
