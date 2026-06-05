@@ -33,7 +33,7 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
 // Cookie-gated public listing of admin games for arcade users.
 export const listPublicAdminGames = createServerFn({ method: "GET" }).handler(async () => {
   if (getCookie(ARCADE_COOKIE_NAME) !== ARCADE_COOKIE_TOKEN) {
-    throw new Error("Unauthorized");
+    return [] as Array<{ id: string; name: string; img: string; html: string; genre: string; device: string; added_at: string }>;
   }
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
