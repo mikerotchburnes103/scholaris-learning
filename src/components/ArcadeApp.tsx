@@ -571,6 +571,31 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
         />
       )}
 
+      {patchOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setPatchOpen(false)}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`max-h-[85vh] w-full max-w-2xl overflow-hidden ${cardR} border border-zinc-800 bg-zinc-950 shadow-2xl`}
+            style={{ borderColor: accent.ring + "66" }}
+          >
+            <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3">
+              <h2 className="text-lg font-bold bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
+              <button onClick={() => setPatchOpen(false)} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
+            </div>
+            <div className="max-h-[70vh] overflow-y-auto px-6 py-5 text-sm leading-relaxed text-zinc-200">
+              {patchMd ? (
+                <pre className="whitespace-pre-wrap break-words font-sans">{patchMd}</pre>
+              ) : (
+                <p className="text-zinc-500">Loading…</p>
+              )}
+            </div>
+            <div className="border-t border-zinc-800 px-5 py-2 text-[11px] text-zinc-500">
+              Edit <code className="rounded bg-zinc-900 px-1.5 py-0.5">public/patchnotes.md</code> on GitHub to update.
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
