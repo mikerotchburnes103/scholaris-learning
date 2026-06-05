@@ -354,6 +354,15 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
+            <button
+              type="button"
+              onClick={() => setSplash(SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)])}
+              title="Click for another"
+              className="arcade-splash mb-1 inline-block origin-bottom-left text-sm font-extrabold uppercase tracking-wide text-yellow-300 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] hover:text-yellow-200"
+              style={{ textShadow: "0 0 6px rgba(250,204,21,0.55), 0 2px 0 rgba(0,0,0,0.4)" }}
+            >
+              {splash}
+            </button>
             <h1 className="mb-2 text-5xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
           </div>
