@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { listPublicAdminGames } from "@/lib/arcade.functions";
 
 export type AdminGame = {
   id: string;
@@ -11,28 +12,25 @@ export type AdminGame = {
   added_at: string;
 };
 
-// Public read of admin-published games. RLS allows SELECT for everyone.
+// Cookie-gated fetch of admin-published games. The admin_games table is no longer
+// publicly readable via the Supabase API — access goes through a server fn that
+// validates the arcade auth cookie. Polled every 30s to pick up new pushes.
 export function useAdminGames() {
   const [rows, setRows] = useState<AdminGame[]>([]);
+  const list = useServerFn(listPublicAdminGames);
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      const { data } = await (supabase as any)
-        .from("admin_games")
-        .select("id,name,img,html,genre,device,added_at")
-        .order("added_at", { ascending: false });
-      if (!cancelled && data) setRows(data as AdminGame[]);
-    })();
-    const ch = supabase.channel("admin_games_live").on(
-      "postgres_changes" as any,
-      { event: "*", schema: "public", table: "admin_games" },
-      () => {
-        (supabase as any).from("admin_games").select("id,name,img,html,genre,device,added_at").order("added_at", { ascending: false }).then(({ data }: any) => {
-          if (data) setRows(data as AdminGame[]);
-        });
-      },
-    ).subscribe();
-    return () => { cancelled = true; supabase.removeChannel(ch); };
-  }, []);
+    const load = async () => {
+      try {
+        const data = await list();
+        if (!cancelled && data) setRows(data as AdminGame[]);
+      } catch {
+        /* not authorized or transient — ignore */
+      }
+    };
+    void load();
+    const t = setInterval(load, 30_000);
+    return () => { cancelled = true; clearInterval(t); };
+  }, [list]);
   return rows;
 }
