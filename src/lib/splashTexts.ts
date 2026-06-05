@@ -10,10 +10,15 @@ export const SPLASH_TEXTS: string[] = [
   "MATTHEW STOP PICKPOCKETING!!!",
   "officially endorsed by triple t",
   "all shits and giggles till someone giggles and shits",
-  "IT'S THE NBEC!!!",
+  "IT\u2019S THE NBEC!!!",
   "matthew and his fuselage at 3 am:",
   "new: arbys chitlin burgers with horse nut sauce",
   "i am pissman",
   "fak u bradar, nex coment",
   "in the end, what is a high tier human to a low tier god?",
-  "say 67 one
+  "say 67 one more time and i\u2019m beheading yo ahh",
+  "01001000 01100001 01101000 00100001 00100000 01000111 01100001 01111001 00100001",
+  "sigeon pex",
+  "sigeon pex!",
+  "certified sigeon pex",
+  "klaides
