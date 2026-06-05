@@ -30,6 +30,20 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+// Cookie-gated public listing of admin games for arcade users.
+export const listPublicAdminGames = createServerFn({ method: "GET" }).handler(async () => {
+  if (getCookie(ARCADE_COOKIE_NAME) !== ARCADE_COOKIE_TOKEN) {
+    throw new Error("Unauthorized");
+  }
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("admin_games")
+    .select("id,name,img,html,genre,device,added_at")
+    .order("added_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
 export const checkArcadeAuth = createServerFn({ method: "GET" }).handler(async () => {
   return { authorized: getCookie(ARCADE_COOKIE_NAME) === ARCADE_COOKIE_TOKEN };
 });
