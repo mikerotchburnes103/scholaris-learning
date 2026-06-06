@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap');
 
 @import "tailwindcss" source(none);
 @source "../src";
@@ -148,18 +148,25 @@
   }
 }
 
-/* Arcade splash text — Minecraft-style wobble */
+/* Arcade splash text — Minecraft-style wobble, Pixelify Sans */
 @keyframes arcade-splash-bounce {
   0%, 100% { transform: rotate(-8deg) scale(1); }
-  50%      { transform: rotate(-8deg) scale(1.12); }
+  50%      { transform: rotate(-8deg) scale(1.18); }
 }
 .arcade-splash {
-  font-family: var(--font-arcade); /* Applied custom arcade font */
+  font-family: 'Pixelify Sans', system-ui, sans-serif;
   animation: arcade-splash-bounce 1s ease-in-out infinite;
   transform-origin: left center;
   cursor: pointer;
   user-select: none;
+  letter-spacing: 0.02em;
 }
+.font-arcade-pixel { font-family: 'Pixelify Sans', system-ui, sans-serif; }
+.font-arcade-retro { font-family: 'Press Start 2P', system-ui, sans-serif; }
+@media (prefers-reduced-motion: reduce) {
+  .arcade-splash { animation: none; transform: rotate(-6deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .arcade-splash { animation: none; transform: rotate(-6deg); }
 }

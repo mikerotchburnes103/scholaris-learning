@@ -6,6 +6,9 @@ import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/l
 import { useAdminGames } from "@/lib/useAdminGames";
 import { SPLASH_TEXTS } from "@/lib/splashTexts";
 import { randomMeme } from "@/lib/memes";
+import { useServerFn } from "@tanstack/react-start";
+import { getSiteConfig } from "@/lib/arcade.functions";
+
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
@@ -131,17 +134,38 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const [splashImg, setSplashImg] = useState(() => randomMeme());
   const [patchOpen, setPatchOpen] = useState(false);
   const [patchMd, setPatchMd] = useState<string>("");
+  const [patchVersion, setPatchVersion] = useState<string>("1");
+  const [autoPatch, setAutoPatch] = useState<boolean>(true);
+  const loadConfig = useServerFn(getSiteConfig);
+
+  // Load patch notes + auto-show on first view of a new version
   useEffect(() => {
-    if (!patchOpen || patchMd) return;
-    fetch("/patchnotes.md", { cache: "no-cache" })
-      .then((r) => (r.ok ? r.text() : "# Patch Notes\n\nNothing here yet."))
-      .then(setPatchMd)
-      .catch(() => setPatchMd("# Patch Notes\n\nFailed to load."));
-  }, [patchOpen, patchMd]);
+    let cancelled = false;
+    loadConfig().then((cfg) => {
+      if (cancelled) return;
+      const md = (cfg.patch_notes as string) || "# Patch Notes\n\nNothing here yet.";
+      const ver = (cfg.patch_version as string) || "1";
+      const auto = (cfg.auto_patch_notes as string) !== "0";
+      setPatchMd(md);
+      setPatchVersion(ver);
+      setAutoPatch(auto);
+      try {
+        const seen = window.localStorage.getItem("arcade.patchSeenVersion");
+        if (seen !== ver) setPatchOpen(true);
+      } catch { /* ignore */ }
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [loadConfig]);
+
+  const closePatch = () => {
+    setPatchOpen(false);
+    try { window.localStorage.setItem("arcade.patchSeenVersion", patchVersion); } catch { /* ignore */ }
+  };
   const rollSplash = () => {
     setSplash(SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)]);
     setSplashImg(randomMeme());
   };
+
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
@@ -173,24 +197,27 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   };
 
   const openInNewTab = (g: Game) => {
+    // Custom / admin games: open the HTML directly via a blob URL (works in modern browsers).
     if (g.custom) {
       const html = findCustomHtml(g.url);
       if (!html) return;
-      const w = window.open("about:blank", "_blank");
-      if (!w) return;
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
+      const blobUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+      window.open(blobUrl, "_blank", "noopener,noreferrer");
       return;
     }
     if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
-    const w = window.open("about:blank", "_blank");
-    if (!w) return;
+    // Stealth mode: open about:blank-style wrapper that hosts the game iframe.
+    // We use a blob URL so the page bypasses popup-blocker / document.write restrictions.
     const src = new URL(g.url, window.location.origin).href;
-    w.document.open();
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${g.name}</title><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`);
-    w.document.close();
+    const wrapper = `<!doctype html><html><head><meta charset="utf-8"><title>${g.name.replace(/</g, "&lt;")}</title><link rel="icon" href="data:,"><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`;
+    const blobUrl = URL.createObjectURL(new Blob([wrapper], { type: "text/html" }));
+    const w = window.open(blobUrl, "_blank", "noopener,noreferrer");
+    if (!w) {
+      // Popup blocked → fall back to opening the bare game in a new tab.
+      window.open(g.url, "_blank", "noopener,noreferrer");
+    }
   };
+
 
 
   // Lock body scroll while playing
@@ -351,7 +378,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       <header className="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Arcade</span>
+            <span className="font-arcade-retro text-base sm:text-lg tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>ARCADE</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -377,27 +404,28 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-2 flex flex-wrap items-center gap-4">
-              <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
+              <h1 className="font-arcade-retro text-3xl sm:text-4xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
               <button
                 type="button"
                 onClick={rollSplash}
                 title="Click for another"
-                className="group flex items-center gap-2 text-left"
+                className="group flex items-center gap-3 text-left"
               >
                 <img
                   src={splashImg}
                   alt=""
-                  className="h-12 w-12 rounded-md object-cover ring-2 ring-yellow-400/60 shadow-[0_0_12px_rgba(250,204,21,0.45)] transition group-hover:scale-110"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
                   loading="lazy"
                 />
                 <span
-                  className="arcade-splash inline-block origin-bottom-left text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.7)] group-hover:text-yellow-200"
-                  style={{ textShadow: "0 0 10px rgba(250,204,21,0.65), 0 2px 0 rgba(0,0,0,0.5)" }}
+                  className="arcade-splash inline-block origin-bottom-left text-2xl sm:text-3xl font-bold tracking-wide text-yellow-300 group-hover:text-yellow-200"
+                  style={{ textShadow: "0 0 12px rgba(250,204,21,0.75), 0 2px 0 rgba(0,0,0,0.55)" }}
                 >
                   {splash}
                 </span>
               </button>
             </div>
+
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
@@ -572,15 +600,15 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       )}
 
       {patchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setPatchOpen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={closePatch}>
           <div
             onClick={(e) => e.stopPropagation()}
             className={`max-h-[85vh] w-full max-w-2xl overflow-hidden ${cardR} border border-zinc-800 bg-zinc-950 shadow-2xl`}
             style={{ borderColor: accent.ring + "66" }}
           >
             <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3">
-              <h2 className="text-lg font-bold bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
-              <button onClick={() => setPatchOpen(false)} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
+              <h2 className="font-arcade-retro text-base bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
+              <button onClick={closePatch} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
             </div>
             <div className="max-h-[70vh] overflow-y-auto px-6 py-5 text-sm leading-relaxed text-zinc-200">
               {patchMd ? (
@@ -588,13 +616,31 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
               ) : (
                 <p className="text-zinc-500">Loading…</p>
               )}
+              {autoPatch && adminGames.length > 0 && (
+                <div className="mt-6 border-t border-zinc-800 pt-4">
+                  <h3 className="font-arcade-pixel text-base mb-2 text-yellow-300">Auto · Recently added games</h3>
+                  <ul className="space-y-1 text-xs text-zinc-300">
+                    {adminGames.slice(0, 8).map((g) => (
+                      <li key={g.id}>• <strong>{g.name}</strong> <span className="text-zinc-500">({g.genre})</span></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            <div className="border-t border-zinc-800 px-5 py-2 text-[11px] text-zinc-500">
-              Edit <code className="rounded bg-zinc-900 px-1.5 py-0.5">public/patchnotes.md</code> on GitHub to update.
+            <div className="flex items-center justify-between gap-2 border-t border-zinc-800 px-5 py-3">
+              <span className="text-[11px] text-zinc-500">v{patchVersion} · Admins can edit from the admin panel.</span>
+              <button
+                onClick={closePatch}
+                className="rounded-md px-3 py-1.5 text-xs font-semibold text-black"
+                style={{ background: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}
+              >
+                Got it!
+              </button>
             </div>
           </div>
         </div>
       )}
+
 
     </div>
   );
