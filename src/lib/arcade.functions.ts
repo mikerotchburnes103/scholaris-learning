@@ -120,3 +120,29 @@ export const adminListGames = createServerFn({ method: "GET" }).handler(async ()
   if (error) throw new Error(error.message);
   return data ?? [];
 });
+
+// ---------- Site config (patch notes, toggles) ----------
+export const getSiteConfig = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin.from("site_config").select("key,value");
+  if (error) throw new Error(error.message);
+  const out: Record<string, string> = {};
+  for (const row of (data ?? []) as Array<{ key: string; value: string }>) out[row.key] = row.value;
+  return out;
+});
+
+export const adminSetSiteConfig = createServerFn({ method: "POST" })
+  .inputValidator(z.object({
+    key: z.enum(["patch_notes", "auto_patch_notes", "patch_version"]),
+    value: z.string().max(200_000),
+  }).parse)
+  .handler(async ({ data }) => {
+    requireAdmin();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("site_config")
+      .upsert({ key: data.key, value: data.value, updated_at: new Date().toISOString() });
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
