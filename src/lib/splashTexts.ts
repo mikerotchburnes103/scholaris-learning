@@ -26,5 +26,3 @@ export const SPLASH_TEXTS: string[] = [
   "klaides vs taking a shower",
   "yes this is a splash text, yes there are multiple of these."
 ];
-
-```
