@@ -151,7 +151,70 @@ function AdminPanel() {
             </ul>
           )}
         </section>
+
+        <PatchNotesEditor />
       </div>
     </div>
   );
 }
+
+function PatchNotesEditor() {
+  const load = useServerFn(getSiteConfig);
+  const save = useServerFn(adminSetSiteConfig);
+  const [md, setMd] = useState("");
+  const [version, setVersion] = useState("1");
+  const [auto, setAuto] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    load().then((cfg) => {
+      setMd((cfg.patch_notes as string) || "");
+      setVersion((cfg.patch_version as string) || "1");
+      setAuto((cfg.auto_patch_notes as string) !== "0");
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, [load]);
+
+  const saveAll = async (bumpVersion: boolean) => {
+    setStatus("Saving…");
+    try {
+      const nextVer = bumpVersion ? String((parseInt(version, 10) || 0) + 1) : version;
+      await save({ data: { key: "patch_notes", value: md } });
+      await save({ data: { key: "auto_patch_notes", value: auto ? "1" : "0" } });
+      await save({ data: { key: "patch_version", value: nextVer } });
+      setVersion(nextVer);
+      setStatus(bumpVersion ? `Saved & published v${nextVer} (will pop up for every user)` : "Saved");
+    } catch (e) {
+      setStatus(e instanceof Error ? e.message : "Failed");
+    }
+  };
+
+  return (
+    <section className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 space-y-3">
+      <h2 className="text-lg font-semibold">Patch notes (server-wide)</h2>
+      {loading ? <p className="text-sm text-zinc-500">Loading…</p> : (
+        <>
+          <textarea
+            value={md}
+            onChange={(e) => setMd(e.target.value)}
+            rows={10}
+            className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-xs"
+            placeholder="# What's new&#10;- ..."
+          />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} className="h-4 w-4" />
+            Auto patch notes (append recently added games to the popup)
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={() => saveAll(false)} className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs hover:border-white">Save</button>
+            <button onClick={() => saveAll(true)} className="rounded-md bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-3 py-1.5 text-xs font-semibold text-black">Save &amp; publish (bump version → re-popup)</button>
+            <span className="text-xs text-zinc-500">Current version: v{version}</span>
+          </div>
+          {status && <p className="text-xs text-zinc-400">{status}</p>}
+        </>
+      )}
+    </section>
+  );
+}
+
