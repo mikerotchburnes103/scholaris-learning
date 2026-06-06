@@ -600,15 +600,15 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       )}
 
       {patchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setPatchOpen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={closePatch}>
           <div
             onClick={(e) => e.stopPropagation()}
             className={`max-h-[85vh] w-full max-w-2xl overflow-hidden ${cardR} border border-zinc-800 bg-zinc-950 shadow-2xl`}
             style={{ borderColor: accent.ring + "66" }}
           >
             <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3">
-              <h2 className="text-lg font-bold bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
-              <button onClick={() => setPatchOpen(false)} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
+              <h2 className="font-arcade-retro text-base bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>📝 Patch Notes</h2>
+              <button onClick={closePatch} className="rounded-md px-2 py-1 text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white">✕</button>
             </div>
             <div className="max-h-[70vh] overflow-y-auto px-6 py-5 text-sm leading-relaxed text-zinc-200">
               {patchMd ? (
@@ -616,13 +616,31 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
               ) : (
                 <p className="text-zinc-500">Loading…</p>
               )}
+              {autoPatch && adminGames.length > 0 && (
+                <div className="mt-6 border-t border-zinc-800 pt-4">
+                  <h3 className="font-arcade-pixel text-base mb-2 text-yellow-300">Auto · Recently added games</h3>
+                  <ul className="space-y-1 text-xs text-zinc-300">
+                    {adminGames.slice(0, 8).map((g) => (
+                      <li key={g.id}>• <strong>{g.name}</strong> <span className="text-zinc-500">({g.genre})</span></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            <div className="border-t border-zinc-800 px-5 py-2 text-[11px] text-zinc-500">
-              Edit <code className="rounded bg-zinc-900 px-1.5 py-0.5">public/patchnotes.md</code> on GitHub to update.
+            <div className="flex items-center justify-between gap-2 border-t border-zinc-800 px-5 py-3">
+              <span className="text-[11px] text-zinc-500">v{patchVersion} · Admins can edit from the admin panel.</span>
+              <button
+                onClick={closePatch}
+                className="rounded-md px-3 py-1.5 text-xs font-semibold text-black"
+                style={{ background: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}
+              >
+                Got it!
+              </button>
             </div>
           </div>
         </div>
       )}
+
 
     </div>
   );
