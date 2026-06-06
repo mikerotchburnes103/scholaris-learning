@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { checkAdminAuth, verifyAdminPassword, adminListGames, adminCreateGame, adminDeleteGame } from "@/lib/arcade.functions";
+import { checkAdminAuth, verifyAdminPassword, adminListGames, adminCreateGame, adminDeleteGame, getSiteConfig, adminSetSiteConfig } from "@/lib/arcade.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Scholaris" }, { name: "robots", content: "noindex,nofollow" }] }),
