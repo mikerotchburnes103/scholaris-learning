@@ -404,27 +404,28 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-2 flex flex-wrap items-center gap-4">
-              <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
+              <h1 className="font-arcade-retro text-3xl sm:text-4xl font-bold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}>Pick a game</h1>
               <button
                 type="button"
                 onClick={rollSplash}
                 title="Click for another"
-                className="group flex items-center gap-2 text-left"
+                className="group flex items-center gap-3 text-left"
               >
                 <img
                   src={splashImg}
                   alt=""
-                  className="h-12 w-12 rounded-md object-cover ring-2 ring-yellow-400/60 shadow-[0_0_12px_rgba(250,204,21,0.45)] transition group-hover:scale-110"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
                   loading="lazy"
                 />
                 <span
-                  className="arcade-splash inline-block origin-bottom-left text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.7)] group-hover:text-yellow-200"
-                  style={{ textShadow: "0 0 10px rgba(250,204,21,0.65), 0 2px 0 rgba(0,0,0,0.5)" }}
+                  className="arcade-splash inline-block origin-bottom-left text-2xl sm:text-3xl font-bold tracking-wide text-yellow-300 group-hover:text-yellow-200"
+                  style={{ textShadow: "0 0 12px rgba(250,204,21,0.75), 0 2px 0 rgba(0,0,0,0.55)" }}
                 >
                   {splash}
                 </span>
               </button>
             </div>
+
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
