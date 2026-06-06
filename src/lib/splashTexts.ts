@@ -1,6 +1,3 @@
-Here is the updated configuration with your new splash texts formatted into the TypeScript array:
-
-```typescript
 // Random splash texts shown next to the Arcade title.
 // Easy to edit — add or remove lines freely. One string per item.
 export const SPLASH_TEXTS: string[] = [
