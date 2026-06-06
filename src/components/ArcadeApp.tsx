@@ -197,24 +197,27 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   };
 
   const openInNewTab = (g: Game) => {
+    // Custom / admin games: open the HTML directly via a blob URL (works in modern browsers).
     if (g.custom) {
       const html = findCustomHtml(g.url);
       if (!html) return;
-      const w = window.open("about:blank", "_blank");
-      if (!w) return;
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
+      const blobUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+      window.open(blobUrl, "_blank", "noopener,noreferrer");
       return;
     }
     if (!openInBlank) { window.open(g.url, "_blank", "noopener,noreferrer"); return; }
-    const w = window.open("about:blank", "_blank");
-    if (!w) return;
+    // Stealth mode: open about:blank-style wrapper that hosts the game iframe.
+    // We use a blob URL so the page bypasses popup-blocker / document.write restrictions.
     const src = new URL(g.url, window.location.origin).href;
-    w.document.open();
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${g.name}</title><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`);
-    w.document.close();
+    const wrapper = `<!doctype html><html><head><meta charset="utf-8"><title>${g.name.replace(/</g, "&lt;")}</title><link rel="icon" href="data:,"><style>html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}iframe{border:0;width:100vw;height:100vh;display:block}</style></head><body><iframe src="${src}" allow="autoplay; fullscreen; gamepad *; cross-origin-isolated" allowfullscreen></iframe></body></html>`;
+    const blobUrl = URL.createObjectURL(new Blob([wrapper], { type: "text/html" }));
+    const w = window.open(blobUrl, "_blank", "noopener,noreferrer");
+    if (!w) {
+      // Popup blocked → fall back to opening the bare game in a new tab.
+      window.open(g.url, "_blank", "noopener,noreferrer");
+    }
   };
+
 
 
   // Lock body scroll while playing
