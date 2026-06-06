@@ -6,6 +6,9 @@ import { useGameStats, bumpPlay, castVote, readVotes, type VoteState } from "@/l
 import { useAdminGames } from "@/lib/useAdminGames";
 import { SPLASH_TEXTS } from "@/lib/splashTexts";
 import { randomMeme } from "@/lib/memes";
+import { useServerFn } from "@tanstack/react-start";
+import { getSiteConfig } from "@/lib/arcade.functions";
+
 
 import peggle from "@/assets/game-peggle.png";
 import penguin from "@/assets/game-penguin.png";
@@ -131,17 +134,38 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
   const [splashImg, setSplashImg] = useState(() => randomMeme());
   const [patchOpen, setPatchOpen] = useState(false);
   const [patchMd, setPatchMd] = useState<string>("");
+  const [patchVersion, setPatchVersion] = useState<string>("1");
+  const [autoPatch, setAutoPatch] = useState<boolean>(true);
+  const loadConfig = useServerFn(getSiteConfig);
+
+  // Load patch notes + auto-show on first view of a new version
   useEffect(() => {
-    if (!patchOpen || patchMd) return;
-    fetch("/patchnotes.md", { cache: "no-cache" })
-      .then((r) => (r.ok ? r.text() : "# Patch Notes\n\nNothing here yet."))
-      .then(setPatchMd)
-      .catch(() => setPatchMd("# Patch Notes\n\nFailed to load."));
-  }, [patchOpen, patchMd]);
+    let cancelled = false;
+    loadConfig().then((cfg) => {
+      if (cancelled) return;
+      const md = (cfg.patch_notes as string) || "# Patch Notes\n\nNothing here yet.";
+      const ver = (cfg.patch_version as string) || "1";
+      const auto = (cfg.auto_patch_notes as string) !== "0";
+      setPatchMd(md);
+      setPatchVersion(ver);
+      setAutoPatch(auto);
+      try {
+        const seen = window.localStorage.getItem("arcade.patchSeenVersion");
+        if (seen !== ver) setPatchOpen(true);
+      } catch { /* ignore */ }
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [loadConfig]);
+
+  const closePatch = () => {
+    setPatchOpen(false);
+    try { window.localStorage.setItem("arcade.patchSeenVersion", patchVersion); } catch { /* ignore */ }
+  };
   const rollSplash = () => {
     setSplash(SPLASH_TEXTS[Math.floor(Math.random() * SPLASH_TEXTS.length)]);
     setSplashImg(randomMeme());
   };
+
   const [panicUrl, setPanicUrl] = useState<string>(() => {
     if (typeof window === "undefined") return "https://examrevision.ie";
     return window.localStorage.getItem(PANIC_KEY) || "https://examrevision.ie";
