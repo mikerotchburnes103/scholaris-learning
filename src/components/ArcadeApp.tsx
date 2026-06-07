@@ -464,6 +464,36 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             </div>
 
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                onClick={playRandom}
+                className={`${ctlR} border px-3 py-1.5 text-xs font-semibold text-zinc-100 transition hover:-translate-y-0.5`}
+                style={{ borderColor: accent.ring, background: `linear-gradient(90deg, ${accent.from}33, ${accent.to}33)` }}
+                title="Pick a random game"
+              >
+                🎲 Random game
+              </button>
+              {lastPlayed && sorted.some((g) => g.url === lastPlayed.url) && (
+                <button
+                  onClick={continueLast}
+                  className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-500`}
+                  title={`Continue ${lastPlayed.name}`}
+                >
+                  ⏵ Continue: <span className="font-semibold">{lastPlayed.name}</span>
+                </button>
+              )}
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-rose-400 hover:text-rose-300`}
+                >
+                  ✕ Clear search
+                </button>
+              )}
+              <span className="ml-auto self-center text-[10px] text-zinc-500">
+                Shortcuts: <kbd className="rounded bg-zinc-800 px-1">Esc</kbd> close · <kbd className="rounded bg-zinc-800 px-1">F</kbd> fullscreen · <kbd className="rounded bg-zinc-800 px-1">N</kbd> new tab
+              </span>
+            </div>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             <label className="flex flex-col gap-1 text-xs text-zinc-400">
@@ -496,6 +526,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             </label>
           </div>
         </div>
+
 
         <div className={`grid ${theme.density === "compact" ? "grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6" : "grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"}`}>
           {sorted.map((g) => {
