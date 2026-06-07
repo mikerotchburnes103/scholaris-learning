@@ -95,7 +95,8 @@ const requireAdmin = async (adminToken?: string) => {
   }
 };
 
-const GameInput = z.object({
+const AdminGameInput = z.object({
+  adminToken: z.string().min(1).max(300),
   name: z.string().min(1).max(120),
   img: z.string().max(2000).optional().default("/game-soundboard.svg"),
   html: z.string().min(1).max(2_000_000),
@@ -104,9 +105,9 @@ const GameInput = z.object({
 });
 
 export const adminCreateGame = createServerFn({ method: "POST" })
-  .inputValidator(GameInput.parse)
+  .inputValidator(AdminGameInput.parse)
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin(data.adminToken);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("admin_games")
@@ -124,17 +125,19 @@ export const adminCreateGame = createServerFn({ method: "POST" })
   });
 
 export const adminDeleteGame = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string().uuid() }).parse)
+  .inputValidator(z.object({ adminToken: z.string().min(1).max(300), id: z.string().uuid() }).parse)
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin(data.adminToken);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("admin_games").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });
 
-export const adminListGames = createServerFn({ method: "GET" }).handler(async () => {
-  requireAdmin();
+export const adminListGames = createServerFn({ method: "POST" })
+  .inputValidator(z.object({ adminToken: z.string().min(1).max(300) }).parse)
+  .handler(async ({ data }) => {
+  await requireAdmin(data.adminToken);
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("admin_games")
