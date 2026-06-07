@@ -79,7 +79,7 @@ export const verifyAdminPassword = createServerFn({ method: "POST" })
       secure: true,
       maxAge: 60 * 60 * 24 * 30,
     });
-    return { ok: true as const };
+    return { ok: true as const, adminToken: await createAdminToken() };
   });
 
 export const checkAdminAuth = createServerFn({ method: "GET" }).handler(async () => {
