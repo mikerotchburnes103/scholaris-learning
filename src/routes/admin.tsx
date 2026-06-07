@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { checkAdminAuth, verifyAdminPassword, adminListGames, adminCreateGame, adminDeleteGame, getSiteConfig, adminSetSiteConfig } from "@/lib/arcade.functions";
