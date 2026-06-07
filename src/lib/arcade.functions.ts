@@ -22,10 +22,9 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
   .inputValidator(z.object({ password: z.string().min(1).max(200) }))
   .handler(async ({ data }) => {
     if (!ARCADE_PASSWORDS.includes(data.password)) return { ok: false as const };
-    setResponseHeaders(
-      new Headers({
-        "Set-Cookie": `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
-      }),
+    setResponseHeader(
+      "Set-Cookie",
+      `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
     );
     return { ok: true as const };
   });
