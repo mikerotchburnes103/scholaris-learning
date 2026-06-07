@@ -77,6 +77,7 @@ const BUSINESS_TIERS = [
 function PricingPage() {
   useA11ySettings();
   const [yearly, setYearly] = useState(false);
+  const [request, setRequest] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#f8f6f0] font-serif text-slate-800 dark:bg-zinc-950 dark:text-zinc-100">
@@ -152,6 +153,7 @@ function PricingPage() {
                   ))}
                 </ul>
                 <button
+                  onClick={() => setRequest(p.name)}
                   className={`rounded-md px-4 py-3 font-semibold transition ${
                     p.highlight
                       ? "bg-[#1e2a52] text-white hover:bg-[#162247] dark:bg-amber-400 dark:text-[#10183a] dark:hover:bg-amber-300"
@@ -178,7 +180,7 @@ function PricingPage() {
                   <li key={f} className="flex gap-2"><span className="text-amber-300">✓</span>{f}</li>
                 ))}
               </ul>
-              <button className="mt-6 rounded-md bg-amber-400 px-6 py-3 font-bold text-[#10183a] transition hover:bg-amber-300">
+              <button onClick={() => setRequest("School & business")} className="mt-6 rounded-md bg-amber-400 px-6 py-3 font-bold text-[#10183a] transition hover:bg-amber-300">
                 Talk to sales
               </button>
             </div>
