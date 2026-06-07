@@ -60,7 +60,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Registered Custom Font Utility (Accessible via font-arcade) */
+  /* Registered Custom Font Utility */
   --font-arcade: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif;
 }
 
@@ -139,34 +139,39 @@
   * {
     border-color: var(--color-border);
   }
-
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
 }
 
-/* Arcade splash text — Minecraft-style wobble, Futura Condensed Extra Bold */
+/* Arcade splash text — Futura Condensed Extra Bold & White Text */
 @keyframes arcade-splash-bounce {
   0%, 100% { transform: rotate(-8deg) scale(1); }
   50%      { transform: rotate(-8deg) scale(1.18); }
 }
+
 .arcade-splash {
   font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif;
   font-weight: 800;
+  color: oklch(1 0 0); /* Pure White */
   animation: arcade-splash-bounce 1s ease-in-out infinite;
   transform-origin: left center;
   cursor: pointer;
   user-select: none;
   letter-spacing: 0.02em;
 }
+
 .font-arcade-pixel { 
   font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif; 
   font-weight: 800;
+  color: oklch(1 0 0); /* Pure White */
 }
+
 .font-arcade-retro { 
   font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif; 
   font-weight: 800;
+  color: oklch(1 0 0); /* Pure White */
 }
 
 @media (prefers-reduced-motion: reduce) {
