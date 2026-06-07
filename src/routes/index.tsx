@@ -296,7 +296,7 @@ function Index() {
               ))}
             </ul>
             <div className="flex gap-2">
-              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-[#1e2a52] py-2 text-sm font-semibold text-white transition-all hover:bg-[#162247] hover:shadow-md">Enroll Now</button>
+              <button onClick={() => { setLesson(null); openEnroll(); }} className="flex-1 rounded-md bg-[#0f1b3d] py-2 text-sm font-semibold text-white transition-all hover:bg-[#1e3a5f] hover:shadow-md">Enrol Now</button>
               <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 dark:border-zinc-700 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 dark:hover:bg-zinc-800">Close</button>
             </div>
           </div>
@@ -326,6 +326,48 @@ function Index() {
                 Sign In
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {enrollOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setEnrollOpen(false)}>
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 dark:bg-zinc-900 dark:text-zinc-100" onClick={(e) => e.stopPropagation()}>
+            {!enrollSent ? (
+              <>
+                <h2 className="mb-1 text-xl font-bold">Scholaris enrolment form</h2>
+                <p className="mb-4 text-sm text-slate-500 dark:text-zinc-400">Applications are reviewed by the academic team.</p>
+                <form
+                  className="space-y-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setEnrollSent(true);
+                  }}
+                >
+                  <input required type="text" placeholder="Student name" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <input required type="email" placeholder="Parent / student email" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <input type="text" placeholder="School (optional)" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <select className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" defaultValue="">
+                    <option value="" disabled>Year / level</option>
+                    <option>Junior Cycle</option>
+                    <option>Transition Year</option>
+                    <option>Leaving Certificate</option>
+                    <option>Other</option>
+                  </select>
+                  <button type="submit" className="w-full rounded-md bg-[#c9a84c] py-2 font-semibold text-[#0f1b3d] transition hover:bg-[#f0d78c]">Send enrolment form</button>
+                </form>
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#c9a84c] text-2xl text-[#0f1b3d]">✓</div>
+                <h2 className="mb-2 text-xl font-bold">Your enrolment form has been sent!</h2>
+                <p className="mb-5 text-sm text-slate-600 dark:text-zinc-300">Expect a reply within 1–3 weeks.</p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <button onClick={jumpToNoReplyFaq} className="flex-1 rounded-md border border-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] transition hover:bg-[#f5f0e0] dark:text-amber-100">I didn’t get a reply back</button>
+                  <button onClick={() => setEnrollOpen(false)} className="rounded-md bg-[#0f1b3d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1e3a5f]">Done</button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
