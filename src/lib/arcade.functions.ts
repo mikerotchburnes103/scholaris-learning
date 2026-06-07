@@ -137,15 +137,15 @@ export const adminDeleteGame = createServerFn({ method: "POST" })
 export const adminListGames = createServerFn({ method: "POST" })
   .inputValidator(z.object({ adminToken: z.string().min(1).max(300) }).parse)
   .handler(async ({ data }) => {
-  await requireAdmin(data.adminToken);
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("admin_games")
-    .select("id, name, img, genre, device, added_at")
-    .order("added_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return data ?? [];
-});
+    await requireAdmin(data.adminToken);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("admin_games")
+      .select("id, name, img, genre, device, added_at")
+      .order("added_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
 
 // ---------- Site config (patch notes, toggles) ----------
 export const getSiteConfig = createServerFn({ method: "GET" }).handler(async () => {
