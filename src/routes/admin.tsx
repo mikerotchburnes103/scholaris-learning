@@ -16,11 +16,11 @@ type Row = { id: string; name: string; img: string; genre: string; device: strin
 
 function AdminRoute() {
   const { authorized } = Route.useRouteContext();
-  return authorized ? <AdminPanel /> : <AdminLogin />;
+  const [authed, setAuthed] = useState(authorized);
+  return authed ? <AdminPanel /> : <AdminLogin onAuthed={() => setAuthed(true)} />;
 }
 
-function AdminLogin() {
-  const navigate = useNavigate();
+function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   const verify = useServerFn(verifyAdminPassword);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
@@ -33,7 +33,7 @@ function AdminLogin() {
           setBusy(true); setErr("");
           try {
             const r = await verify({ data: { password: pw } });
-            if (r.ok) navigate({ to: "/admin", reloadDocument: true });
+            if (r.ok) onAuthed();
             else setErr("Wrong password");
           } catch { setErr("Failed"); }
           setBusy(false);
