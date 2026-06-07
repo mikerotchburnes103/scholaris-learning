@@ -154,13 +154,13 @@ function AdminPanel({ adminToken }: { adminToken: string }) {
           )}
         </section>
 
-        <PatchNotesEditor />
+        <PatchNotesEditor adminToken={adminToken} />
       </div>
     </div>
   );
 }
 
-function PatchNotesEditor() {
+function PatchNotesEditor({ adminToken }: { adminToken: string }) {
   const load = useServerFn(getSiteConfig);
   const save = useServerFn(adminSetSiteConfig);
   const [md, setMd] = useState("");
@@ -182,9 +182,9 @@ function PatchNotesEditor() {
     setStatus("Saving…");
     try {
       const nextVer = bumpVersion ? String((parseInt(version, 10) || 0) + 1) : version;
-      await save({ data: { key: "patch_notes", value: md } });
-      await save({ data: { key: "auto_patch_notes", value: auto ? "1" : "0" } });
-      await save({ data: { key: "patch_version", value: nextVer } });
+      await save({ data: { adminToken, key: "patch_notes", value: md } });
+      await save({ data: { adminToken, key: "auto_patch_notes", value: auto ? "1" : "0" } });
+      await save({ data: { adminToken, key: "patch_version", value: nextVer } });
       setVersion(nextVer);
       setStatus(bumpVersion ? `Saved & published v${nextVer} (will pop up for every user)` : "Saved");
     } catch (e) {
