@@ -96,7 +96,7 @@ const requireAdmin = async (adminToken?: string) => {
 };
 
 const AdminGameInput = z.object({
-  adminToken: z.string().min(1).max(300),
+  adminToken: z.string().max(300).optional().default(""),
   name: z.string().min(1).max(120),
   img: z.string().max(2000).optional().default("/game-soundboard.svg"),
   html: z.string().min(1).max(2_000_000),
@@ -125,7 +125,7 @@ export const adminCreateGame = createServerFn({ method: "POST" })
   });
 
 export const adminDeleteGame = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ adminToken: z.string().min(1).max(300), id: z.string().uuid() }).parse)
+  .inputValidator(z.object({ adminToken: z.string().max(300).optional().default(""), id: z.string().uuid() }).parse)
   .handler(async ({ data }) => {
     await requireAdmin(data.adminToken);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -135,7 +135,7 @@ export const adminDeleteGame = createServerFn({ method: "POST" })
   });
 
 export const adminListGames = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ adminToken: z.string().min(1).max(300) }).parse)
+  .inputValidator(z.object({ adminToken: z.string().max(300).optional().default("") }).parse)
   .handler(async ({ data }) => {
     await requireAdmin(data.adminToken);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
