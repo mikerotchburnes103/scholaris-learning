@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader, setResponseHeaders } from "@tanstack/react-start/server";
+import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import {
   ARCADE_COOKIE_NAME,
@@ -22,10 +22,9 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
   .inputValidator(z.object({ password: z.string().min(1).max(200) }))
   .handler(async ({ data }) => {
     if (!ARCADE_PASSWORDS.includes(data.password)) return { ok: false as const };
-    setResponseHeaders(
-      new Headers({
-        "Set-Cookie": `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
-      }),
+    setResponseHeader(
+      "Set-Cookie",
+      `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
     );
     return { ok: true as const };
   });
