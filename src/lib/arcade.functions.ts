@@ -159,11 +159,12 @@ export const getSiteConfig = createServerFn({ method: "GET" }).handler(async () 
 
 export const adminSetSiteConfig = createServerFn({ method: "POST" })
   .inputValidator(z.object({
+    adminToken: z.string().max(300).optional().default(""),
     key: z.enum(["patch_notes", "auto_patch_notes", "patch_version"]),
     value: z.string().max(200_000),
   }).parse)
   .handler(async ({ data }) => {
-    requireAdmin();
+    await requireAdmin(data.adminToken);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("site_config")
