@@ -241,12 +241,31 @@ function Index() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-white py-10 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="border-t border-slate-200 bg-white py-12 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">As featured in</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400 dark:text-zinc-500">
-            {["EdWeek", "The Atlantic", "NPR Education", "UNESCO", "PBS Learning", "Khan Foundation"].map((p) => (
-              <span key={p} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 cursor-default">{p}</span>
+          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">Used by schools and study clubs across Ireland</p>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {IRISH_SCHOOLS.map((p) => (
+              <button key={p} onClick={() => openLesson("About")} className="rounded-lg border border-[#c9a84c]/30 bg-[#f5f0e0] px-4 py-4 text-sm font-bold text-[#0f1b3d] shadow-sm transition hover:-translate-y-1 hover:border-[#c9a84c] hover:bg-[#f0d78c] dark:bg-[#0f1b3d] dark:text-amber-100">
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="border-t border-slate-200 bg-[#f5f0e0] py-16 dark:border-zinc-800 dark:bg-[#071026]">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="mb-8 text-center text-3xl font-bold">Frequently asked questions</h2>
+          <div className="grid gap-4">
+            {FAQS.map(([q, a], i) => (
+              <details id={i === 0 ? "faq-no-reply" : undefined} key={q} className="group rounded-lg border border-[#c9a84c]/30 bg-white p-5 transition open:border-[#c9a84c] dark:bg-zinc-900">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+                  {q}
+                  <span className="text-[#c9a84c] transition group-open:rotate-180">▾</span>
+                </summary>
+                <p className="mt-3 text-sm text-slate-600 dark:text-zinc-300">{a}</p>
+              </details>
             ))}
           </div>
         </div>
