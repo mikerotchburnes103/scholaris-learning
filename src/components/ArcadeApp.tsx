@@ -330,8 +330,29 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       try { window.localStorage.setItem(PLAYS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
+    try { window.localStorage.setItem("arcade.lastPlayed", JSON.stringify({ url: g.url, name: g.name, img: g.img })); } catch { /* ignore */ }
     if (!g.custom) bumpPlay(g.url);
     setPlaying(g);
+  };
+
+  const [lastPlayed, setLastPlayed] = useState<{ url: string; name: string; img: string } | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return JSON.parse(window.localStorage.getItem("arcade.lastPlayed") || "null"); } catch { return null; }
+  });
+  useEffect(() => {
+    if (playing) setLastPlayed({ url: playing.url, name: playing.name, img: playing.img });
+  }, [playing]);
+
+  const playRandom = () => {
+    if (sorted.length === 0) return;
+    const g = sorted[Math.floor(Math.random() * sorted.length)];
+    startGame(g);
+  };
+
+  const continueLast = () => {
+    if (!lastPlayed) return;
+    const g = sorted.find((x) => x.url === lastPlayed.url);
+    if (g) startGame(g);
   };
 
 
@@ -347,10 +368,26 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     setPlaying(null);
   };
 
+  // Keyboard shortcuts while playing: Esc → close, F → fullscreen, N → new tab
+  useEffect(() => {
+    if (!playing) return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (e.key === "Escape") { e.preventDefault(); goHome(); }
+      else if (e.key === "f" || e.key === "F") { e.preventDefault(); goFullscreen(); }
+      else if (e.key === "n" || e.key === "N") { e.preventDefault(); openInNewTab(playing); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing]);
+
   const panic = () => {
     // Synchronous, minimal work for fastest possible navigation
     window.location.replace(panicUrlRef.current || "https://examrevision.ie");
   };
+
 
   const bgClass =
     theme.bg === "mono" ? "bg-zinc-950" :
