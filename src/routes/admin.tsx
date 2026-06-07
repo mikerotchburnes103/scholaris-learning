@@ -13,14 +13,16 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Row = { id: string; name: string; img: string; genre: string; device: string; added_at: string };
+const ADMIN_TOKEN_KEY = "scholaris.adminToken";
 
 function AdminRoute() {
   const { authorized } = Route.useRouteContext();
   const [authed, setAuthed] = useState(authorized);
-  return authed ? <AdminPanel /> : <AdminLogin onAuthed={() => setAuthed(true)} />;
+  const [adminToken, setAdminToken] = useState(() => typeof window === "undefined" ? "" : sessionStorage.getItem(ADMIN_TOKEN_KEY) || "");
+  return authed ? <AdminPanel adminToken={adminToken} /> : <AdminLogin onAuthed={(token) => { sessionStorage.setItem(ADMIN_TOKEN_KEY, token); setAdminToken(token); setAuthed(true); }} />;
 }
 
-function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
+function AdminLogin({ onAuthed }: { onAuthed: (token: string) => void }) {
   const verify = useServerFn(verifyAdminPassword);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
@@ -33,7 +35,7 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
           setBusy(true); setErr("");
           try {
             const r = await verify({ data: { password: pw } });
-            if (r.ok) onAuthed();
+            if (r.ok) onAuthed(r.adminToken);
             else setErr("Wrong password");
           } catch { setErr("Failed"); }
           setBusy(false);
