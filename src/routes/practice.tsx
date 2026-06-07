@@ -85,17 +85,27 @@ const SKILLS: Skill[] = [
   },
 ];
 
+const shuffleQuestions = (count: number) => {
+  const order = Array.from({ length: count }, (_, i) => i);
+  for (let i = order.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+};
+
 function PracticePage() {
   useA11ySettings();
   const [activeId, setActiveId] = useState<string>(SKILLS[0].id);
   const skill = useMemo(() => SKILLS.find((s) => s.id === activeId)!, [activeId]);
   const [qIndex, setQIndex] = useState(0);
+  const [qOrder, setQOrder] = useState(() => shuffleQuestions(SKILLS[0].questions.length));
   const [picked, setPicked] = useState<number | null>(null);
   const [streak, setStreak] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [attempted, setAttempted] = useState(0);
 
-  const question = skill.questions[qIndex];
+  const question = skill.questions[qOrder[qIndex] ?? 0];
 
   const choose = (i: number) => {
     if (picked !== null) return;
@@ -111,12 +121,21 @@ function PracticePage() {
 
   const next = () => {
     setPicked(null);
-    setQIndex((i) => (i + 1) % skill.questions.length);
+    setQIndex((i) => {
+      const nextIndex = i + 1;
+      if (nextIndex >= skill.questions.length) {
+        setQOrder(shuffleQuestions(skill.questions.length));
+        return 0;
+      }
+      return nextIndex;
+    });
   };
 
   const switchSkill = (id: string) => {
     setActiveId(id);
+    const nextSkill = SKILLS.find((s) => s.id === id)!;
     setQIndex(0);
+    setQOrder(shuffleQuestions(nextSkill.questions.length));
     setPicked(null);
     setStreak(0);
     setCorrect(0);

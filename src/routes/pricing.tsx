@@ -77,6 +77,7 @@ const BUSINESS_TIERS = [
 function PricingPage() {
   useA11ySettings();
   const [yearly, setYearly] = useState(false);
+  const [request, setRequest] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#f8f6f0] font-serif text-slate-800 dark:bg-zinc-950 dark:text-zinc-100">
@@ -152,6 +153,7 @@ function PricingPage() {
                   ))}
                 </ul>
                 <button
+                  onClick={() => setRequest(p.name)}
                   className={`rounded-md px-4 py-3 font-semibold transition ${
                     p.highlight
                       ? "bg-[#1e2a52] text-white hover:bg-[#162247] dark:bg-amber-400 dark:text-[#10183a] dark:hover:bg-amber-300"
@@ -178,7 +180,7 @@ function PricingPage() {
                   <li key={f} className="flex gap-2"><span className="text-amber-300">✓</span>{f}</li>
                 ))}
               </ul>
-              <button className="mt-6 rounded-md bg-amber-400 px-6 py-3 font-bold text-[#10183a] transition hover:bg-amber-300">
+              <button onClick={() => setRequest("School & business")} className="mt-6 rounded-md bg-amber-400 px-6 py-3 font-bold text-[#10183a] transition hover:bg-amber-300">
                 Talk to sales
               </button>
             </div>
@@ -220,6 +222,16 @@ function PricingPage() {
       <footer className="border-t border-slate-200 py-8 text-center text-xs text-slate-500 dark:border-zinc-800 dark:text-zinc-400">
         © 2026 Scholaris Learning Institute · <Link to="/" className="hover:underline">Home</Link>
       </footer>
+
+      {request && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm" onClick={() => setRequest(null)}>
+          <div className="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-2xl dark:bg-zinc-900" onClick={(e) => e.stopPropagation()}>
+            <h2 className="mb-2 text-xl font-bold">{request} request started</h2>
+            <p className="mb-5 text-sm text-slate-600 dark:text-zinc-300">A Scholaris advisor will follow up with setup details, Irish school support options, and access instructions.</p>
+            <button onClick={() => setRequest(null)} className="rounded-md bg-[#1e2a52] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#162247] dark:bg-amber-400 dark:text-[#10183a]">Got it</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

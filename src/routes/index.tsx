@@ -45,6 +45,17 @@ const REVIEWERS = [
   { n: "James W.", r: "Retired engineer", q: "Picked up Latin and astronomy in retirement. Lovely community of curious people.", img: "https://i.pravatar.cc/96?img=15" },
 ];
 
+const IRISH_SCHOOLS = ["St Brigid's College", "Cork North Learning Hub", "Galway Grammar", "Liffey Valley Academy", "Donegal STEM School", "Waterford Scholars" ];
+
+const FAQS = [
+  ["I didn't get a reply back.", "This means that your form was reviewed but wasn't found to be eligible."],
+  ["Is Scholaris available in Ireland?", "Yes. We support Irish learners, schools, and study groups, including Junior Cycle and Leaving Certificate revision paths."],
+  ["Do I need a school email?", "No. You can apply with any email, but school emails are reviewed faster."],
+  ["How long does enrolment review take?", "Expect a reply within 1–3 weeks after sending the form."],
+  ["Can teachers use Scholaris with a class?", "Yes. Teachers can request class packs, shared practice sets, and printable lesson materials."],
+  ["Are the courses actually free?", "The core library and practice questions are free; some premium tutoring and school tools are optional."],
+];
+
 function Index() {
   useA11ySettings(); // bootstrap saved preferences
   const [open, setOpen] = useState(false);
@@ -53,6 +64,8 @@ function Index() {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [panel, setPanel] = useState<FooterPanel>(null);
   const [arcadeOpen, setArcadeOpen] = useState(false);
+  const [enrollOpen, setEnrollOpen] = useState(false);
+  const [enrollSent, setEnrollSent] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +86,16 @@ function Index() {
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
 
+  const openEnroll = () => {
+    setEnrollOpen(true);
+    setEnrollSent(false);
+  };
+
+  const jumpToNoReplyFaq = () => {
+    setEnrollOpen(false);
+    requestAnimationFrame(() => document.getElementById("faq-no-reply")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+  };
+
   if (arcadeOpen) {
     return (
       <div className="fixed inset-0 z-[100] overflow-auto bg-zinc-950">
@@ -82,7 +105,7 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="min-h-screen bg-[#f5f0e0] text-[#0f1b3d] font-serif transition-colors duration-500 dark:bg-[#071026] dark:text-amber-50">
       <div className="bg-[#10183a] text-amber-50 text-xs dark:bg-[#0a1029]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
@@ -110,10 +133,10 @@ function Index() {
           </nav>
 
           <button
-            onClick={() => setOpen(true)}
-            className="rounded-md bg-[#1e2a52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#162247] hover:shadow-md hover:-translate-y-0.5"
+            onClick={openEnroll}
+            className="rounded-md bg-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] shadow-sm transition-all hover:bg-[#f0d78c] hover:shadow-md hover:-translate-y-0.5"
           >
-            Sign In
+            Enrol
           </button>
         </div>
       </header>
@@ -131,8 +154,9 @@ function Index() {
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-[#1e2a52] px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#162247] hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
+              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-[#0f1b3d] px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#1e3a5f] hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
               <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 dark:border-zinc-700 px-6 py-3 font-semibold transition-all hover:bg-slate-100 dark:hover:bg-zinc-800 hover:-translate-y-0.5">Watch Demo</button>
+              <button onClick={openEnroll} className="rounded-md bg-[#c9a84c] px-6 py-3 font-semibold text-[#0f1b3d] shadow-md transition-all hover:bg-[#f0d78c] hover:shadow-lg hover:-translate-y-0.5">Apply</button>
             </div>
             <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500 dark:text-zinc-400">
               <span>★★★★★ 4.9/5 — 28,401 reviews</span>
@@ -217,12 +241,31 @@ function Index() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-white py-10 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="border-t border-slate-200 bg-white py-12 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">As featured in</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400 dark:text-zinc-500">
-            {["EdWeek", "The Atlantic", "NPR Education", "UNESCO", "PBS Learning", "Khan Foundation"].map((p) => (
-              <span key={p} className="transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300 cursor-default">{p}</span>
+          <p className="mb-6 text-center text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400">Used by schools and study clubs across Ireland</p>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {IRISH_SCHOOLS.map((p) => (
+              <button key={p} onClick={() => openLesson("About")} className="rounded-lg border border-[#c9a84c]/30 bg-[#f5f0e0] px-4 py-4 text-sm font-bold text-[#0f1b3d] shadow-sm transition hover:-translate-y-1 hover:border-[#c9a84c] hover:bg-[#f0d78c] dark:bg-[#0f1b3d] dark:text-amber-100">
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="border-t border-slate-200 bg-[#f5f0e0] py-16 dark:border-zinc-800 dark:bg-[#071026]">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="mb-8 text-center text-3xl font-bold">Frequently asked questions</h2>
+          <div className="grid gap-4">
+            {FAQS.map(([q, a], i) => (
+              <details id={i === 0 ? "faq-no-reply" : undefined} key={q} className="group rounded-lg border border-[#c9a84c]/30 bg-white p-5 transition open:border-[#c9a84c] dark:bg-zinc-900">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+                  {q}
+                  <span className="text-[#c9a84c] transition group-open:rotate-180">▾</span>
+                </summary>
+                <p className="mt-3 text-sm text-slate-600 dark:text-zinc-300">{a}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -253,7 +296,7 @@ function Index() {
               ))}
             </ul>
             <div className="flex gap-2">
-              <button onClick={() => { setLesson(null); setOpen(true); }} className="flex-1 rounded-md bg-[#1e2a52] py-2 text-sm font-semibold text-white transition-all hover:bg-[#162247] hover:shadow-md">Enroll Now</button>
+              <button onClick={() => { setLesson(null); openEnroll(); }} className="flex-1 rounded-md bg-[#0f1b3d] py-2 text-sm font-semibold text-white transition-all hover:bg-[#1e3a5f] hover:shadow-md">Enrol Now</button>
               <button onClick={() => setLesson(null)} className="rounded-md border border-slate-300 dark:border-zinc-700 px-4 py-2 text-sm font-semibold transition hover:bg-slate-100 dark:hover:bg-zinc-800">Close</button>
             </div>
           </div>
@@ -283,6 +326,48 @@ function Index() {
                 Sign In
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {enrollOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setEnrollOpen(false)}>
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 dark:bg-zinc-900 dark:text-zinc-100" onClick={(e) => e.stopPropagation()}>
+            {!enrollSent ? (
+              <>
+                <h2 className="mb-1 text-xl font-bold">Scholaris enrolment form</h2>
+                <p className="mb-4 text-sm text-slate-500 dark:text-zinc-400">Applications are reviewed by the academic team.</p>
+                <form
+                  className="space-y-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setEnrollSent(true);
+                  }}
+                >
+                  <input required type="text" placeholder="Student name" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <input required type="email" placeholder="Parent / student email" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <input type="text" placeholder="School (optional)" className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" />
+                  <select className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800" defaultValue="">
+                    <option value="" disabled>Year / level</option>
+                    <option>Junior Cycle</option>
+                    <option>Transition Year</option>
+                    <option>Leaving Certificate</option>
+                    <option>Other</option>
+                  </select>
+                  <button type="submit" className="w-full rounded-md bg-[#c9a84c] py-2 font-semibold text-[#0f1b3d] transition hover:bg-[#f0d78c]">Send enrolment form</button>
+                </form>
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#c9a84c] text-2xl text-[#0f1b3d]">✓</div>
+                <h2 className="mb-2 text-xl font-bold">Your enrolment form has been sent!</h2>
+                <p className="mb-5 text-sm text-slate-600 dark:text-zinc-300">Expect a reply within 1–3 weeks.</p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <button onClick={jumpToNoReplyFaq} className="flex-1 rounded-md border border-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] transition hover:bg-[#f5f0e0] dark:text-amber-100">I didn’t get a reply back</button>
+                  <button onClick={() => setEnrollOpen(false)} className="rounded-md bg-[#0f1b3d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1e3a5f]">Done</button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
