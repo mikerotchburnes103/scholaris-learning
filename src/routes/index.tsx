@@ -64,6 +64,8 @@ function Index() {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [panel, setPanel] = useState<FooterPanel>(null);
   const [arcadeOpen, setArcadeOpen] = useState(false);
+  const [enrollOpen, setEnrollOpen] = useState(false);
+  const [enrollSent, setEnrollSent] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +85,16 @@ function Index() {
 
 
   const openLesson = (key: string) => setLesson(LESSONS[key] ?? LESSONS.Courses);
+
+  const openEnroll = () => {
+    setEnrollOpen(true);
+    setEnrollSent(false);
+  };
+
+  const jumpToNoReplyFaq = () => {
+    setEnrollOpen(false);
+    requestAnimationFrame(() => document.getElementById("faq-no-reply")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+  };
 
   if (arcadeOpen) {
     return (
