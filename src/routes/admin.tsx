@@ -57,7 +57,7 @@ function AdminLogin({ onAuthed }: { onAuthed: (token: string) => void }) {
   );
 }
 
-function AdminPanel() {
+function AdminPanel({ adminToken }: { adminToken: string }) {
   const list = useServerFn(adminListGames);
   const create = useServerFn(adminCreateGame);
   const del = useServerFn(adminDeleteGame);
@@ -73,7 +73,7 @@ function AdminPanel() {
 
   const refresh = async () => {
     setLoading(true);
-    try { setRows((await list()) as Row[]); setErr(""); }
+    try { setRows((await list({ data: { adminToken } })) as Row[]); setErr(""); }
     catch (e) { setErr(e instanceof Error ? e.message : "Failed"); }
     setLoading(false);
   };
@@ -120,7 +120,7 @@ function AdminPanel() {
             onClick={async () => {
               setBusy(true); setErr("");
               try {
-                await create({ data: { name: name.trim(), genre: genre.trim() || "Custom", device, img: img || "/game-soundboard.svg", html } });
+                await create({ data: { adminToken, name: name.trim(), genre: genre.trim() || "Custom", device, img: img || "/game-soundboard.svg", html } });
                 setName(""); setGenre("Custom"); setImg(""); setHtml("");
                 await refresh();
               } catch (e) { setErr(e instanceof Error ? e.message : "Failed"); }
@@ -145,7 +145,7 @@ function AdminPanel() {
                     <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · {new Date(g.added_at).toLocaleString()}</div>
                   </div>
                   <button
-                    onClick={async () => { if (!confirm(`Delete ${g.name}?`)) return; await del({ data: { id: g.id } }); await refresh(); }}
+                    onClick={async () => { if (!confirm(`Delete ${g.name}?`)) return; await del({ data: { adminToken, id: g.id } }); await refresh(); }}
                     className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-rose-400 hover:border-rose-500"
                   >Delete</button>
                 </li>
