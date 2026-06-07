@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader, setResponseHeaders } from "@tanstack/react-start/server";
+import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import {
   ARCADE_COOKIE_NAME,
