@@ -414,7 +414,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 <img
                   src={splashImg}
                   alt=""
-                  className="h-28 w-28 sm:h-36 sm:w-36 rounded-lg object-cover ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
+                  className="max-h-44 w-auto h-auto rounded-lg object-contain ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
                   loading="lazy"
                 />
                 <span
