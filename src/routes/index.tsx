@@ -316,23 +316,43 @@ function Index() {
           <div className="w-full max-w-sm rounded-lg bg-white dark:bg-zinc-900 dark:text-zinc-100 p-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300" onClick={(e) => e.stopPropagation()}>
             <h2 className="mb-1 text-xl font-bold">Sign in to Scholaris</h2>
             <p className="mb-4 text-sm text-slate-500 dark:text-zinc-400">Access your courses and progress.</p>
-            <form onSubmit={submit} className="space-y-3">
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-[#1e2a52] focus:outline-none focus:ring-2 focus:ring-[#1e2a52]/20"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={pw}
-                onChange={(e) => { setPw(e.target.value); setErr(""); }}
-                className="w-full rounded-md border border-slate-300 dark:border-zinc-700 dark:bg-zinc-800 px-3 py-2 text-sm transition focus:border-[#1e2a52] focus:outline-none focus:ring-2 focus:ring-[#1e2a52]/20"
-              />
-              {err && <p className="text-xs text-red-600 animate-in fade-in slide-in-from-top-1">{err}</p>}
+            <form onSubmit={submit} className="space-y-3" autoComplete="off">
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">User ID</span>
+                <input
+                  type="text"
+                  placeholder="example@gmail.com"
+                  defaultValue=""
+                  autoComplete="username"
+                  className={`w-full rounded-md border px-3 py-2 text-sm transition focus:outline-none focus:ring-2 dark:bg-zinc-800 ${err ? "border-red-500 ring-1 ring-red-300 focus:border-red-500 focus:ring-red-200" : "border-slate-300 dark:border-zinc-700 focus:border-[#1e2a52] focus:ring-[#1e2a52]/20"}`}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">Password</span>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={pw}
+                  autoComplete="current-password"
+                  onChange={(e) => { setPw(e.target.value); setErr(""); }}
+                  className={`w-full rounded-md border px-3 py-2 text-sm transition focus:outline-none focus:ring-2 dark:bg-zinc-800 ${err ? "border-red-500 ring-1 ring-red-300 focus:border-red-500 focus:ring-red-200" : "border-slate-300 dark:border-zinc-700 focus:border-[#1e2a52] focus:ring-[#1e2a52]/20"}`}
+                />
+              </label>
+              {err && (
+                <div className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-700 animate-in fade-in slide-in-from-top-1 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+                  <span className="font-semibold">User ID or password is incorrect.</span> Please check your credentials and try again.
+                </div>
+              )}
+              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
+                <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input type="checkbox" className="rounded border-slate-300" /> Remember me
+                </label>
+                <button type="button" onClick={() => { setOpen(false); openEnroll(); }} className="hover:underline text-[#1e2a52] dark:text-amber-300">Forgot password?</button>
+              </div>
               <button type="submit" className="w-full rounded-md bg-[#1e2a52] py-2 font-semibold text-white transition-all hover:bg-[#162247] hover:shadow-md">
                 Sign In
               </button>
+              <p className="text-center text-[11px] text-slate-400 dark:text-zinc-500">Protected by Scholaris SSO · TLS 1.3</p>
             </form>
           </div>
         </div>
