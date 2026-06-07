@@ -105,7 +105,7 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] text-slate-800 font-serif transition-colors duration-500 dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="min-h-screen bg-[#f5f0e0] text-[#0f1b3d] font-serif transition-colors duration-500 dark:bg-[#071026] dark:text-amber-50">
       <div className="bg-[#10183a] text-amber-50 text-xs dark:bg-[#0a1029]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1.5">
           <span>Accredited · ISO 21001:2018 Certified Education Provider</span>
@@ -133,10 +133,10 @@ function Index() {
           </nav>
 
           <button
-            onClick={() => setOpen(true)}
-            className="rounded-md bg-[#1e2a52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#162247] hover:shadow-md hover:-translate-y-0.5"
+            onClick={openEnroll}
+            className="rounded-md bg-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] shadow-sm transition-all hover:bg-[#f0d78c] hover:shadow-md hover:-translate-y-0.5"
           >
-            Sign In
+            Enrol
           </button>
         </div>
       </header>
@@ -154,8 +154,9 @@ function Index() {
               Scholaris brings free, high-quality lessons in math, science, history, and the arts to your fingertips. Learn at your own pace, from expert educators with decades of classroom experience.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-[#1e2a52] px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#162247] hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
+              <button onClick={() => openLesson("Browse Courses")} className="rounded-md bg-[#0f1b3d] px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#1e3a5f] hover:shadow-lg hover:-translate-y-0.5">Browse Courses</button>
               <button onClick={() => openLesson("Watch Demo")} className="rounded-md border border-slate-300 dark:border-zinc-700 px-6 py-3 font-semibold transition-all hover:bg-slate-100 dark:hover:bg-zinc-800 hover:-translate-y-0.5">Watch Demo</button>
+              <button onClick={openEnroll} className="rounded-md bg-[#c9a84c] px-6 py-3 font-semibold text-[#0f1b3d] shadow-md transition-all hover:bg-[#f0d78c] hover:shadow-lg hover:-translate-y-0.5">Apply</button>
             </div>
             <div className="mt-8 flex flex-wrap gap-6 text-xs text-slate-500 dark:text-zinc-400">
               <span>★★★★★ 4.9/5 — 28,401 reviews</span>
