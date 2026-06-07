@@ -45,6 +45,17 @@ const REVIEWERS = [
   { n: "James W.", r: "Retired engineer", q: "Picked up Latin and astronomy in retirement. Lovely community of curious people.", img: "https://i.pravatar.cc/96?img=15" },
 ];
 
+const IRISH_SCHOOLS = ["St Brigid's College", "Cork North Learning Hub", "Galway Grammar", "Liffey Valley Academy", "Donegal STEM School", "Waterford Scholars" ];
+
+const FAQS = [
+  ["I didn't get a reply back.", "This means that your form was reviewed but wasn't found to be eligible."],
+  ["Is Scholaris available in Ireland?", "Yes. We support Irish learners, schools, and study groups, including Junior Cycle and Leaving Certificate revision paths."],
+  ["Do I need a school email?", "No. You can apply with any email, but school emails are reviewed faster."],
+  ["How long does enrolment review take?", "Expect a reply within 1–3 weeks after sending the form."],
+  ["Can teachers use Scholaris with a class?", "Yes. Teachers can request class packs, shared practice sets, and printable lesson materials."],
+  ["Are the courses actually free?", "The core library and practice questions are free; some premium tutoring and school tools are optional."],
+];
+
 function Index() {
   useA11ySettings(); // bootstrap saved preferences
   const [open, setOpen] = useState(false);
