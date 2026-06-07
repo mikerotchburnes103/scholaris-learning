@@ -330,8 +330,29 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
       try { window.localStorage.setItem(PLAYS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
+    try { window.localStorage.setItem("arcade.lastPlayed", JSON.stringify({ url: g.url, name: g.name, img: g.img })); } catch { /* ignore */ }
     if (!g.custom) bumpPlay(g.url);
     setPlaying(g);
+  };
+
+  const [lastPlayed, setLastPlayed] = useState<{ url: string; name: string; img: string } | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return JSON.parse(window.localStorage.getItem("arcade.lastPlayed") || "null"); } catch { return null; }
+  });
+  useEffect(() => {
+    if (playing) setLastPlayed({ url: playing.url, name: playing.name, img: playing.img });
+  }, [playing]);
+
+  const playRandom = () => {
+    if (sorted.length === 0) return;
+    const g = sorted[Math.floor(Math.random() * sorted.length)];
+    startGame(g);
+  };
+
+  const continueLast = () => {
+    if (!lastPlayed) return;
+    const g = sorted.find((x) => x.url === lastPlayed.url);
+    if (g) startGame(g);
   };
 
 
@@ -347,10 +368,26 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
     setPlaying(null);
   };
 
+  // Keyboard shortcuts while playing: Esc → close, F → fullscreen, N → new tab
+  useEffect(() => {
+    if (!playing) return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (e.key === "Escape") { e.preventDefault(); goHome(); }
+      else if (e.key === "f" || e.key === "F") { e.preventDefault(); goFullscreen(); }
+      else if (e.key === "n" || e.key === "N") { e.preventDefault(); openInNewTab(playing); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing]);
+
   const panic = () => {
     // Synchronous, minimal work for fastest possible navigation
     window.location.replace(panicUrlRef.current || "https://examrevision.ie");
   };
+
 
   const bgClass =
     theme.bg === "mono" ? "bg-zinc-950" :
@@ -414,7 +451,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
                 <img
                   src={splashImg}
                   alt=""
-                  className="h-28 w-28 sm:h-36 sm:w-36 rounded-lg object-cover ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
+                  className="max-h-44 w-auto h-auto rounded-lg object-contain ring-2 ring-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.55)] transition group-hover:scale-110 group-hover:rotate-3"
                   loading="lazy"
                 />
                 <span
@@ -427,6 +464,36 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             </div>
 
             <p className="text-zinc-400">{sorted.length} games available · click any title to play.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                onClick={playRandom}
+                className={`${ctlR} border px-3 py-1.5 text-xs font-semibold text-zinc-100 transition hover:-translate-y-0.5`}
+                style={{ borderColor: accent.ring, background: `linear-gradient(90deg, ${accent.from}33, ${accent.to}33)` }}
+                title="Pick a random game"
+              >
+                🎲 Random game
+              </button>
+              {lastPlayed && sorted.some((g) => g.url === lastPlayed.url) && (
+                <button
+                  onClick={continueLast}
+                  className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-500`}
+                  title={`Continue ${lastPlayed.name}`}
+                >
+                  ⏵ Continue: <span className="font-semibold">{lastPlayed.name}</span>
+                </button>
+              )}
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className={`${ctlR} border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-rose-400 hover:text-rose-300`}
+                >
+                  ✕ Clear search
+                </button>
+              )}
+              <span className="ml-auto self-center text-[10px] text-zinc-500">
+                Shortcuts: <kbd className="rounded bg-zinc-800 px-1">Esc</kbd> close · <kbd className="rounded bg-zinc-800 px-1">F</kbd> fullscreen · <kbd className="rounded bg-zinc-800 px-1">N</kbd> new tab
+              </span>
+            </div>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             <label className="flex flex-col gap-1 text-xs text-zinc-400">
@@ -459,6 +526,7 @@ export function ArcadeApp({ onExit }: { onExit: () => void }) {
             </label>
           </div>
         </div>
+
 
         <div className={`grid ${theme.density === "compact" ? "grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6" : "grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"}`}>
           {sorted.map((g) => {
