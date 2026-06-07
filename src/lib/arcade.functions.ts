@@ -10,6 +10,30 @@ import {
   ADMIN_PASSWORDS,
 } from "./arcade.server";
 
+const encoder = new TextEncoder();
+const ADMIN_SESSION_MS = 6 * 60 * 60 * 1000;
+
+const toHex = (buffer: ArrayBuffer) =>
+  [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+const signAdminExpiry = async (expiresAt: number) => {
+  const key = await crypto.subtle.importKey("raw", encoder.encode(ADMIN_COOKIE_TOKEN), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return toHex(await crypto.subtle.sign("HMAC", key, encoder.encode(String(expiresAt))));
+};
+
+const createAdminToken = async () => {
+  const expiresAt = Date.now() + ADMIN_SESSION_MS;
+  return `${expiresAt}.${await signAdminExpiry(expiresAt)}`;
+};
+
+const verifyAdminToken = async (token?: string) => {
+  if (!token) return false;
+  const [expiresAtRaw, signature] = token.split(".");
+  const expiresAt = Number(expiresAtRaw);
+  if (!Number.isFinite(expiresAt) || expiresAt < Date.now() || !signature) return false;
+  return signature === await signAdminExpiry(expiresAt);
+};
+
 // ---------- Arcade gate (existing) ----------
 export const verifyArcadePassword = createServerFn({ method: "POST" })
   .inputValidator(z.object({ password: z.string().min(1).max(200) }))
@@ -22,7 +46,7 @@ export const verifyArcadePassword = createServerFn({ method: "POST" })
       secure: true,
       maxAge: 60 * 60 * 24 * 30,
     });
-    return { ok: true as const };
+    return { ok: true as const, adminToken: await createAdminToken() };
   });
 
 // Cookie-gated public listing of admin games for arcade users.
@@ -63,8 +87,10 @@ export const checkAdminAuth = createServerFn({ method: "GET" }).handler(async ()
 });
 
 // ---------- Admin game CRUD ----------
-const requireAdmin = () => {
-  if (getCookie(ADMIN_COOKIE_NAME) !== ADMIN_COOKIE_TOKEN) {
+const isAdmin = async (adminToken?: string) => getCookie(ADMIN_COOKIE_NAME) === ADMIN_COOKIE_TOKEN || await verifyAdminToken(adminToken);
+
+const requireAdmin = async (adminToken?: string) => {
+  if (!(await isAdmin(adminToken))) {
     throw new Error("Unauthorized");
   }
 };
