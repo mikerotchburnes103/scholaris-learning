@@ -13,14 +13,16 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Row = { id: string; name: string; img: string; genre: string; device: string; added_at: string };
+const ADMIN_TOKEN_KEY = "scholaris.adminToken";
 
 function AdminRoute() {
   const { authorized } = Route.useRouteContext();
   const [authed, setAuthed] = useState(authorized);
-  return authed ? <AdminPanel /> : <AdminLogin onAuthed={() => setAuthed(true)} />;
+  const [adminToken, setAdminToken] = useState(() => typeof window === "undefined" ? "" : sessionStorage.getItem(ADMIN_TOKEN_KEY) || "");
+  return authed ? <AdminPanel adminToken={adminToken} /> : <AdminLogin onAuthed={(token) => { sessionStorage.setItem(ADMIN_TOKEN_KEY, token); setAdminToken(token); setAuthed(true); }} />;
 }
 
-function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
+function AdminLogin({ onAuthed }: { onAuthed: (token: string) => void }) {
   const verify = useServerFn(verifyAdminPassword);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
@@ -33,7 +35,7 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
           setBusy(true); setErr("");
           try {
             const r = await verify({ data: { password: pw } });
-            if (r.ok) onAuthed();
+            if (r.ok) onAuthed(r.adminToken);
             else setErr("Wrong password");
           } catch { setErr("Failed"); }
           setBusy(false);
@@ -55,7 +57,7 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   );
 }
 
-function AdminPanel() {
+function AdminPanel({ adminToken }: { adminToken: string }) {
   const list = useServerFn(adminListGames);
   const create = useServerFn(adminCreateGame);
   const del = useServerFn(adminDeleteGame);
@@ -71,7 +73,7 @@ function AdminPanel() {
 
   const refresh = async () => {
     setLoading(true);
-    try { setRows((await list()) as Row[]); setErr(""); }
+    try { setRows((await list({ data: { adminToken } })) as Row[]); setErr(""); }
     catch (e) { setErr(e instanceof Error ? e.message : "Failed"); }
     setLoading(false);
   };
@@ -118,7 +120,7 @@ function AdminPanel() {
             onClick={async () => {
               setBusy(true); setErr("");
               try {
-                await create({ data: { name: name.trim(), genre: genre.trim() || "Custom", device, img: img || "/game-soundboard.svg", html } });
+                await create({ data: { adminToken, name: name.trim(), genre: genre.trim() || "Custom", device, img: img || "/game-soundboard.svg", html } });
                 setName(""); setGenre("Custom"); setImg(""); setHtml("");
                 await refresh();
               } catch (e) { setErr(e instanceof Error ? e.message : "Failed"); }
@@ -143,7 +145,7 @@ function AdminPanel() {
                     <div className="truncate text-[11px] text-zinc-500">{g.genre} · {g.device} · {new Date(g.added_at).toLocaleString()}</div>
                   </div>
                   <button
-                    onClick={async () => { if (!confirm(`Delete ${g.name}?`)) return; await del({ data: { id: g.id } }); await refresh(); }}
+                    onClick={async () => { if (!confirm(`Delete ${g.name}?`)) return; await del({ data: { adminToken, id: g.id } }); await refresh(); }}
                     className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-rose-400 hover:border-rose-500"
                   >Delete</button>
                 </li>
@@ -152,13 +154,13 @@ function AdminPanel() {
           )}
         </section>
 
-        <PatchNotesEditor />
+        <PatchNotesEditor adminToken={adminToken} />
       </div>
     </div>
   );
 }
 
-function PatchNotesEditor() {
+function PatchNotesEditor({ adminToken }: { adminToken: string }) {
   const load = useServerFn(getSiteConfig);
   const save = useServerFn(adminSetSiteConfig);
   const [md, setMd] = useState("");
@@ -180,9 +182,9 @@ function PatchNotesEditor() {
     setStatus("Saving…");
     try {
       const nextVer = bumpVersion ? String((parseInt(version, 10) || 0) + 1) : version;
-      await save({ data: { key: "patch_notes", value: md } });
-      await save({ data: { key: "auto_patch_notes", value: auto ? "1" : "0" } });
-      await save({ data: { key: "patch_version", value: nextVer } });
+      await save({ data: { adminToken, key: "patch_notes", value: md } });
+      await save({ data: { adminToken, key: "auto_patch_notes", value: auto ? "1" : "0" } });
+      await save({ data: { adminToken, key: "patch_version", value: nextVer } });
       setVersion(nextVer);
       setStatus(bumpVersion ? `Saved & published v${nextVer} (will pop up for every user)` : "Saved");
     } catch (e) {
