@@ -61,7 +61,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Registered Custom Font Utility (Accessible via font-arcade) */
-  --font-arcade: 'Press Start 2P', monospace, sans-serif;
+  --font-arcade: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif;
 }
 
 :root {
@@ -146,23 +146,27 @@
   }
 }
 
-/* Arcade splash text — Minecraft-style wobble, Pixelify Sans */
+/* Arcade splash text — Minecraft-style wobble, Futura Condensed Extra Bold */
 @keyframes arcade-splash-bounce {
   0%, 100% { transform: rotate(-8deg) scale(1); }
   50%      { transform: rotate(-8deg) scale(1.18); }
 }
 .arcade-splash {
-  font-family: 'Pixelify Sans', system-ui, sans-serif;
+  font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif;
+  font-weight: 800;
   animation: arcade-splash-bounce 1s ease-in-out infinite;
   transform-origin: left center;
   cursor: pointer;
   user-select: none;
   letter-spacing: 0.02em;
 }
-.font-arcade-pixel { font-family: 'Pixelify Sans', system-ui, sans-serif; }
-.font-arcade-retro { font-family: 'Press Start 2P', system-ui, sans-serif; }
-@media (prefers-reduced-motion: reduce) {
-  .arcade-splash { animation: none; transform: rotate(-6deg); }
+.font-arcade-pixel { 
+  font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif; 
+  font-weight: 800;
+}
+.font-arcade-retro { 
+  font-family: 'Futura-CondensedExtraBold', 'Futura Condensed', sans-serif; 
+  font-weight: 800;
 }
 
 @media (prefers-reduced-motion: reduce) {
