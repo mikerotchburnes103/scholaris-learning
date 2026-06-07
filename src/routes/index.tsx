@@ -132,12 +132,20 @@ function Index() {
             <Link to="/pricing" className="relative transition-colors hover:text-[#1e2a52] dark:hover:text-amber-300">Pricing</Link>
           </nav>
 
-          <button
-            onClick={openEnroll}
-            className="rounded-md bg-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] shadow-sm transition-all hover:bg-[#f0d78c] hover:shadow-md hover:-translate-y-0.5"
-          >
-            Enrol
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setErr(""); setPw(""); setOpen(true); }}
+              className="rounded-md border border-[#0f1b3d]/20 px-4 py-2 text-sm font-semibold text-[#0f1b3d] transition-all hover:bg-[#0f1b3d]/5 hover:-translate-y-0.5 dark:border-amber-300/40 dark:text-amber-200 dark:hover:bg-amber-300/10"
+            >
+              Log in
+            </button>
+            <button
+              onClick={openEnroll}
+              className="rounded-md bg-[#c9a84c] px-4 py-2 text-sm font-semibold text-[#0f1b3d] shadow-sm transition-all hover:bg-[#f0d78c] hover:shadow-md hover:-translate-y-0.5"
+            >
+              Enrol
+            </button>
+          </div>
         </div>
       </header>
 
