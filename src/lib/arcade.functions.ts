@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
+import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { z } from "zod";
 import {
   ARCADE_COOKIE_NAME,
@@ -10,22 +10,18 @@ import {
   ADMIN_PASSWORDS,
 } from "./arcade.server";
 
-const getCookie = (name: string) => {
-  const cookie = getRequestHeader("cookie") || "";
-  const parts = cookie.split(/;\s*/);
-  const match = parts.find((c) => c.startsWith(`${name}=`));
-  return match ? match.slice(name.length + 1) : "";
-};
-
 // ---------- Arcade gate (existing) ----------
 export const verifyArcadePassword = createServerFn({ method: "POST" })
   .inputValidator(z.object({ password: z.string().min(1).max(200) }))
   .handler(async ({ data }) => {
     if (!ARCADE_PASSWORDS.includes(data.password)) return { ok: false as const };
-    setResponseHeader(
-      "Set-Cookie",
-      `${ARCADE_COOKIE_NAME}=${ARCADE_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
-    );
+    setCookie(ARCADE_COOKIE_NAME, ARCADE_COOKIE_TOKEN, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 30,
+    });
     return { ok: true as const };
   });
 
@@ -52,10 +48,13 @@ export const verifyAdminPassword = createServerFn({ method: "POST" })
   .inputValidator(z.object({ password: z.string().min(1).max(200) }))
   .handler(async ({ data }) => {
     if (!ADMIN_PASSWORDS.includes(data.password)) return { ok: false as const };
-    setResponseHeader(
-      "Set-Cookie",
-      `${ADMIN_COOKIE_NAME}=${ADMIN_COOKIE_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
-    );
+    setCookie(ADMIN_COOKIE_NAME, ADMIN_COOKIE_TOKEN, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 30,
+    });
     return { ok: true as const };
   });
 
