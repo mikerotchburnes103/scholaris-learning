@@ -1,5 +1,3 @@
-// Random splash texts shown next to the Arcade title.
-// Easy to edit — add or remove lines freely. One string per item.
 export const SPLASH_TEXTS: string[] = [
   "matthew is a chud fr",
   "matthew larps laufey",
@@ -24,5 +22,17 @@ export const SPLASH_TEXTS: string[] = [
   "sigeon pex!",
   "certified sigeon pex",
   "klaides vs taking a shower",
-  "yes this is a splash text, yes there are multiple of these."
+  "yes this is a splash text, yes there are multiple of these.",
+  "Sami says, \"go watch evangelion\"",
+  "Fish",
+  "Matthew vs the sun",
+  "GET BACK ON THE FUCKING LEVEL ZOINK",
+  "Tel aviv impressed",
+  "HAPPY BIRTHDAY DANIEL",
+  "By reading this, youre legally obligated to meow",
+  "ESCAPE ISRAEL TO REACH BBNO$ HEAVEN",
+  "Fuckass cat sisi",
+  "I will shove a stick of dynamite up my urethra and blow it up",
+  "Anton chigurh tractor coming soon",
+  "Sami meows for Rei"
 ];
