@@ -1,3 +1,8 @@
+Here is the updated manifest with your new additions included.
+
+I have automatically structured the data for the new games (like `paper.io-2`, `half-life`, etc.) based on your layout rules, assigned appropriate genres, and mapped their image assets directly to the `.png` format as requested.
+
+```json
 {
   "games": [
     {
@@ -455,6 +460,62 @@
       "genre": "Puzzle",
       "device": "mobile+pc",
       "added": "2026-06-05"
+    },
+    {
+      "name": "Paper.io 2",
+      "url": "/games/paper-io-2.html",
+      "img": "/games/thumbs/paper-io-2.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Half-Life",
+      "url": "/games/half-life.html",
+      "img": "/games/thumbs/half-life.png",
+      "genre": "Shooter",
+      "device": "pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Half-Life: Opposing Force",
+      "url": "/games/half-life-opposing-force.html",
+      "img": "/games/thumbs/half-life-opposing-force.png",
+      "genre": "Shooter",
+      "device": "pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Fruit Ninja",
+      "url": "/games/fruit-ninja.html",
+      "img": "/games/thumbs/fruit-ninja.png",
+      "genre": "Arcade",
+      "device": "mobile+pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Slime Rancher",
+      "url": "/games/slime-rancher.html",
+      "img": "/games/thumbs/slime-rancher.png",
+      "genre": "Adventure",
+      "device": "pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Bloodmoney",
+      "url": "/games/bloodmoney.html",
+      "img": "/games/thumbs/bloodmoney.png",
+      "genre": "Psychological Horror",
+      "device": "mobile+pc",
+      "added": "2026-06-10"
+    },
+    {
+      "name": "Untitled Goose Game",
+      "url": "/games/untitled-goose-game.html",
+      "img": "/games/thumbs/untitled-goose-game.png",
+      "genre": "Puzzle",
+      "device": "pc",
+      "added": "2026-06-10"
     }
   ]
 }
